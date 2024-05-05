@@ -2,8 +2,6 @@ package org.foxesworld;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
@@ -12,7 +10,6 @@ import com.jme3.system.AppSettings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.foxesworld.engine.Engine;
-import org.foxesworld.engine.providers.material.MaterialProvider;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -58,9 +55,9 @@ public class FrozenLands extends SimpleApplication {
     private static void setIcon(AppSettings settings) {
         try {
             BufferedImage[] icons = new BufferedImage[]{
-                    ImageIO.read(FrozenLands.class.getResource("/test64.png")),
-                    ImageIO.read(FrozenLands.class.getResource("/test32.png")),
-                    ImageIO.read(FrozenLands.class.getResource("/test16.png"))
+                    ImageIO.read(FrozenLands.class.getResource("/textures/gui/test64.png")),
+                    ImageIO.read(FrozenLands.class.getResource("/textures/gui/test32.png")),
+                    ImageIO.read(FrozenLands.class.getResource("/textures/gui/test16.png"))
             };
             settings.setIcons(icons);
         } catch (IOException ignored) {
@@ -71,5 +68,9 @@ public class FrozenLands extends SimpleApplication {
             super("Player", new Box(0.5f, 1, 0.5f));
             setMaterial(engine.getMaterialProvider().getMaterial("color#pink"));
         }
+    }
+
+    public Engine getEngine() {
+        return engine;
     }
 }

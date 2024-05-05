@@ -4,17 +4,20 @@ import com.jme3.app.Application;
 import com.jme3.app.state.BaseAppState;
 import org.foxesworld.FrozenLands;
 import org.foxesworld.engine.providers.material.MaterialProvider;
+import org.foxesworld.engine.sky.Sky;
 
 public class Engine extends BaseAppState {
 
     private final FrozenLands frozenLands;
+    private final Sky sky;
     protected MaterialProvider materialProvider;
 
     public  Engine(FrozenLands frozenLands) {
-
         this.frozenLands = frozenLands;
         this.materialProvider = new MaterialProvider(this.frozenLands);
         this.materialProvider.loadMaterials("data/materials.json");
+        this.sky = new Sky(this.frozenLands);
+        sky.addSky();
     }
 
     @Override

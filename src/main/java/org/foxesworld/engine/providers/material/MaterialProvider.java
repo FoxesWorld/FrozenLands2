@@ -2,7 +2,6 @@ package org.foxesworld.engine.providers.material;
 
 import com.google.gson.Gson;
 import com.jme3.material.Material;
-import com.jme3.material.MaterialDef;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.texture.Texture;
@@ -15,6 +14,7 @@ import java.util.Map;
 import static org.foxesworld.engine.utils.InputReader.inputReader;
 
 public class MaterialProvider extends MaterialAbstract {
+    private final  String matDir = "textures/materials/";
     private final Map<String, Material> materials = new HashMap<>();
 private final FrozenLands frozenLands;
     public MaterialProvider(FrozenLands frozenLands) {
@@ -36,29 +36,24 @@ private final FrozenLands frozenLands;
     @Override
     public Material createMat(String dir, String type) {
         int textureNum = 0, varNum = 0;
-        MaterialDef materialDef = null;
-        String baseDir = "textures/" + dir + '/';
+        //MaterialDef materialDef = null;
+        String baseDir = matDir + dir + '/';
         MatOpt matOpt = readMatConfig(baseDir + "matOpt/" + type + ".json");
         initMaterial(matOpt.getMatDef());
         getMaterial().setName(dir);
         for(TextureInstance textureInstance: matOpt.getTextures()){
-            materialDef = (MaterialDef) frozenLands.getAssetManager().loadAsset(matOpt.getMatDef());
-            //if (materialDef.getMaterialParams().contains(textureInstance.textureParam())) {
+            //materialDef = (MaterialDef) frozenLands.getAssetManager().loadAsset(matOpt.getMatDef());
                 Texture thisTexture = getFrozenLands().getAssetManager().loadTexture(baseDir + "textures/" + textureInstance.getRegOptions().getTexture());
                 thisTexture.setWrap(Texture.WrapMode.valueOf(textureInstance.getRegOptions().getWrap()));
-                //wrapType(wrapType, thisTexture);
                 // TODO
                 // Image Size can be set here
                 getMaterial().setTexture(textureInstance.textureParam(), thisTexture);
                 textureNum++;
                 FrozenLands.logger.info("Adding {} texture to {}",thisTexture, dir);
-            //} else {
-            //    FrozenLands.logger.warn("{} doesn't have {} param", dir,textureInstance.textureParam());
-            //}
         }
 
         for (ParamData varOption: matOpt.getParams()) {
-            inputType(materialDef, varOption, dir);
+            inputType(varOption, dir);
             varNum++;
         }
         FrozenLands.logger.info(dir + '#'+type + " has " + textureNum + " textures and " + varNum + " vars");
@@ -66,10 +61,9 @@ private final FrozenLands frozenLands;
         return getMaterial();
     }
 
-    private void inputType(MaterialDef materialDef, ParamData varOption, String material) {
+    private void inputType(ParamData varOption, String material) {
         VarType inputType = VarType.valueOf(varOption.getParamOpt().getType().toUpperCase());
         String paramName = varOption.getParamName();
-        //if(materialDef.getMaterialParams().contains(paramName)) {
             Object value = varOption.getParamOpt().getValue();
             switch (inputType) {
                 case FLOAT -> setMaterialFloat(paramName, Integer.parseInt((String) value));
@@ -83,9 +77,6 @@ private final FrozenLands frozenLands;
                 }
             }
             FrozenLands.logger.info("Adding param {} for material {}", paramName, material);
-        //} else {
-        //    FrozenLands.logger.warn("Skipping param {} for material {}", paramName, material);
-        //}
     }
 
     private ColorRGBA parseColor(String colorStr) {
@@ -96,11 +87,9 @@ private final FrozenLands frozenLands;
         float a = Float.parseFloat(rgba[3]);
         return new ColorRGBA(r, g, b, a);
     }
-
     private MatOpt readMatConfig(String path) {
         return new Gson().fromJson(inputReader(path), MatOpt.class);
     }
-
     private enum VarType {
         FLOAT,
         VECTOR,
@@ -108,7 +97,6 @@ private final FrozenLands frozenLands;
         COLOR,
         INT
     }
-
     public Material getMaterial(String mat) {
         return materials.get(mat);
     }
