@@ -1,6 +1,6 @@
 package org.foxesworld.engine.providers.material.attributes;
 
-public class VarOptions {
+public class ParamOpt {
     private String type;
     private String value;
 

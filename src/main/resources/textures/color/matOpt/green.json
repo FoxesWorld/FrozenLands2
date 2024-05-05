@@ -2,10 +2,10 @@
   "matDef": "Common/MatDefs/Misc/Unshaded.j3md",
   "textures": [
   ],
-  "vars": [
+  "params": [
     {
-      "varName": "Color",
-      "varOpt": {
+      "paramName": "Color",
+      "paramOpt": {
         "type": "color",
         "value": "0,1,0,1"
       }

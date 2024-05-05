@@ -17,7 +17,6 @@ import org.foxesworld.engine.providers.material.MaterialProvider;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 public class FrozenLands extends SimpleApplication {
 
     public static final Logger logger =  LogManager.getLogger(FrozenLands.class);
@@ -70,8 +69,6 @@ public class FrozenLands extends SimpleApplication {
     private class Player extends Geometry {
         public Player(Engine engine) {
             super("Player", new Box(0.5f, 1, 0.5f));
-            Material playerMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-            playerMat.setColor("Color", ColorRGBA.Blue);
             setMaterial(engine.getMaterialProvider().getMaterial("color#pink"));
         }
     }

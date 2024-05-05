@@ -1,46 +1,25 @@
 {
-  "matDef": "Common/MatDefs/Post/BloomExtract.j3md",
+  "matDef": "Common/MatDefs/Misc/Unshaded.j3md",
   "textures": [
     {
-      "textureParam": "Texture",
+      "textureParam": "ColorMap",
       "regOptions": {
         "texture": "cracked_soil_BaseColor.jpg",
         "wrap": "Repeat"
       }
     },
     {
-      "textureParam": "GlowMap",
+      "textureParam": "LightMap",
       "regOptions": {
         "texture": "cracked_soil_AmbientOcclusion.jpg",
         "wrap": "Repeat"
       }
     }
   ],
-  "vars": [
+  "params": [
     {
-      "varName": "NumSamples",
-      "varOpt": {
-        "type": "int",
-        "value": 12
-      }
-    },
-    {
-      "varName": "ExposurePow",
-      "varOpt": {
-        "type": "float",
-        "value": 1
-      }
-    },
-    {
-      "varName": "ExposureCutoff",
-      "varOpt": {
-        "type": "float",
-        "value": 1
-      }
-    },
-    {
-      "varName": "Extract",
-      "varOpt": {
+      "paramName": "HardwareShadows",
+      "paramOpt": {
         "type": "boolean",
         "value": true
       }

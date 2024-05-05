@@ -4,7 +4,7 @@ import java.util.List;
 public class MatOpt {
     private String matDef;
     private List<TextureInstance> textures;
-    private List<VarData> vars;
+    private List<ParamData> params;
     public String getMatDef() {
         return matDef;
     }
@@ -13,7 +13,7 @@ public class MatOpt {
         return textures;
     }
 
-    public List<VarData> getVars() {
-        return vars;
+    public List<ParamData> getParams() {
+        return params;
     }
 }

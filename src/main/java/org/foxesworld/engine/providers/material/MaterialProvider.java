@@ -57,7 +57,7 @@ private final FrozenLands frozenLands;
             //}
         }
 
-        for (VarData varOption: matOpt.getVars()) {
+        for (ParamData varOption: matOpt.getParams()) {
             inputType(materialDef, varOption, dir);
             varNum++;
         }
@@ -66,11 +66,11 @@ private final FrozenLands frozenLands;
         return getMaterial();
     }
 
-    private void inputType(MaterialDef materialDef, VarData varOption, String material) {
-        VarType inputType = VarType.valueOf(varOption.getVarOpt().getType().toUpperCase());
-        String paramName = varOption.getVarName();
+    private void inputType(MaterialDef materialDef, ParamData varOption, String material) {
+        VarType inputType = VarType.valueOf(varOption.getParamOpt().getType().toUpperCase());
+        String paramName = varOption.getParamName();
         //if(materialDef.getMaterialParams().contains(paramName)) {
-            Object value = varOption.getVarOpt().getValue();
+            Object value = varOption.getParamOpt().getValue();
             switch (inputType) {
                 case FLOAT -> setMaterialFloat(paramName, Integer.parseInt((String) value));
                 case BOOLEAN -> setMaterialBoolean(paramName, Boolean.getBoolean((String) value));
