@@ -1,0 +1,14 @@
+{
+  "matDef": "Common/MatDefs/Misc/Unshaded.j3md",
+  "textures": [
+  ],
+  "vars": [
+    {
+      "varName": "Color",
+      "varOpt": {
+        "type": "color",
+        "value": "0,1,0,1"
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "matName": "soil",
+    "matType": "default"
+  },
+  {
+    "matName": "color",
+    "matType": "green"
+  },
+  {
+    "matName": "color",
+    "matType": "pink"
+  }
+]

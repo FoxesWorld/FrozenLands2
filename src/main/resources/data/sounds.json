@@ -1,0 +1,114 @@
+{
+  "player": [
+    {
+      "soundDir": "footstep/stone/",
+      "event": "walking/",
+      "settings": {
+        "volume": 2.0,
+        "positional": false,
+        "pitch": 1.0,
+        "dataType": "Buffer"
+      },
+      "sounds": [
+        "walk1.ogg",
+        "walk2.ogg",
+        "walk3.ogg",
+        "walk4.ogg",
+        "walk5.ogg",
+        "walk6.ogg",
+        "walk7.ogg",
+        "walk8.ogg",
+        "walk9.ogg",
+        "walk10.ogg",
+        "walk11.ogg",
+        "walk12.ogg",
+        "walk13.ogg",
+        "walk14.ogg",
+        "walk15.ogg"
+      ]
+    },
+    {
+      "soundDir": "footstep/stone/",
+      "event": "sprinting/",
+      "settings": {
+        "volume": 2.0,
+        "positional": false,
+        "pitch": 1.0,
+        "dataType": "Buffer"
+      },
+      "sounds": [
+        "sprint1.ogg",
+        "sprint2.ogg",
+        "sprint3.ogg",
+        "sprint4.ogg",
+        "sprint5.ogg",
+        "sprint6.ogg",
+        "sprint7.ogg",
+        "sprint8.ogg",
+        "sprint9.ogg",
+        "sprint10.ogg",
+        "sprint11.ogg",
+        "sprint12.ogg",
+        "sprint13.ogg",
+        "sprint14.ogg",
+        "sprint15.ogg",
+        "sprint16.ogg"
+      ]
+    },
+    {
+      "soundDir": "footstep/stone/",
+      "event": "jump/land",
+      "settings": {
+        "volume": 2.0,
+        "positional": false,
+        "pitch": 1.0,
+        "dataType": "Buffer"
+      },
+      "sounds": [
+        "/land1.ogg",
+        "/land2.ogg",
+        "/land3.ogg"
+      ]
+    },
+    {
+      "event": "jump/takeoff",
+      "soundDir": "footstep/stone/",
+      "settings": {
+        "volume": 2.0,
+        "positional": false,
+        "pitch": 1.0,
+        "dataType": "Buffer"
+      },
+      "sounds": [
+        "/takeoff1.ogg",
+        "/takeoff2.ogg"
+      ]
+    },
+    {
+      "event": "action",
+      "soundDir": "footstep/stone/",
+      "settings": {
+        "volume": 2.0,
+        "positional": false,
+        "pitch": 1.0,
+        "dataType": "Buffer"
+      },
+      "sounds": [
+        "/gooseSkin.ogg"
+      ]
+    },
+    {
+      "event": "spawn",
+      "soundDir": "",
+      "settings": {
+        "volume": 2.0,
+        "positional": false,
+        "pitch": 1.0,
+        "dataType": "Buffer"
+      },
+      "sounds": [
+        "/reveal.ogg"
+      ]
+    }
+  ]
+}

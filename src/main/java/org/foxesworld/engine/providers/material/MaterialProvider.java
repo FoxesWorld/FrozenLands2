@@ -1,0 +1,115 @@
+package org.foxesworld.engine.providers.material;
+
+import com.google.gson.Gson;
+import com.jme3.material.Material;
+import com.jme3.material.MaterialDef;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
+import com.jme3.texture.Texture;
+import org.foxesworld.FrozenLands;
+import org.foxesworld.engine.providers.material.attributes.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.foxesworld.engine.utils.InputReader.inputReader;
+
+public class MaterialProvider extends MaterialAbstract {
+    private final Map<String, Material> materials = new HashMap<>();
+private final FrozenLands frozenLands;
+    public MaterialProvider(FrozenLands frozenLands) {
+        this.frozenLands = frozenLands;
+        setAssetManager(frozenLands);
+    }
+
+    @Override
+    public void loadMaterials(String path) {
+        FrozenLands.logger.info("Adding materials");
+        for (Materials mat: new Gson().fromJson(inputReader(path), Materials[].class)) {
+            FrozenLands.logger.info("Adding '" + mat.getMatName() + "' material of type " + mat.getMatType());
+            materials.put(mat.getMatName() + '#' + mat.getMatType(), createMat(mat.getMatName(), mat.getMatType()));
+        }
+
+        FrozenLands.logger.info("Finished adding materials, total matAmount: " + materials.size());
+    }
+
+    @Override
+    public Material createMat(String dir, String type) {
+        int textureNum = 0, varNum = 0;
+        MaterialDef materialDef = null;
+        String baseDir = "textures/" + dir + '/';
+        MatOpt matOpt = readMatConfig(baseDir + "matOpt/" + type + ".json");
+        initMaterial(matOpt.getMatDef());
+        getMaterial().setName(dir);
+        for(TextureInstance textureInstance: matOpt.getTextures()){
+            materialDef = (MaterialDef) frozenLands.getAssetManager().loadAsset(matOpt.getMatDef());
+            //if (materialDef.getMaterialParams().contains(textureInstance.textureParam())) {
+                Texture thisTexture = getFrozenLands().getAssetManager().loadTexture(baseDir + "textures/" + textureInstance.getRegOptions().getTexture());
+                thisTexture.setWrap(Texture.WrapMode.valueOf(textureInstance.getRegOptions().getWrap()));
+                //wrapType(wrapType, thisTexture);
+                // TODO
+                // Image Size can be set here
+                getMaterial().setTexture(textureInstance.textureParam(), thisTexture);
+                textureNum++;
+                FrozenLands.logger.info("Adding {} texture to {}",thisTexture, dir);
+            //} else {
+            //    FrozenLands.logger.warn("{} doesn't have {} param", dir,textureInstance.textureParam());
+            //}
+        }
+
+        for (VarData varOption: matOpt.getVars()) {
+            inputType(materialDef, varOption, dir);
+            varNum++;
+        }
+        FrozenLands.logger.info(dir + '#'+type + " has " + textureNum + " textures and " + varNum + " vars");
+
+        return getMaterial();
+    }
+
+    private void inputType(MaterialDef materialDef, VarData varOption, String material) {
+        VarType inputType = VarType.valueOf(varOption.getVarOpt().getType().toUpperCase());
+        String paramName = varOption.getVarName();
+        //if(materialDef.getMaterialParams().contains(paramName)) {
+            Object value = varOption.getVarOpt().getValue();
+            switch (inputType) {
+                case FLOAT -> setMaterialFloat(paramName, Integer.parseInt((String) value));
+                case BOOLEAN -> setMaterialBoolean(paramName, Boolean.getBoolean((String) value));
+                case COLOR -> setMaterialColor(paramName, parseColor((String) value));
+                case INT -> setMaterialInt(paramName, Integer.parseInt((String) value));
+                case VECTOR -> {
+                    String[] valStr = String.valueOf(value).split(",");
+                    Vector3f vector3f = new Vector3f(Integer.parseInt(valStr[0]), Integer.parseInt(valStr[1]), Integer.parseInt(valStr[2]));
+                    setMaterialVector(paramName, vector3f);
+                }
+            }
+            FrozenLands.logger.info("Adding param {} for material {}", paramName, material);
+        //} else {
+        //    FrozenLands.logger.warn("Skipping param {} for material {}", paramName, material);
+        //}
+    }
+
+    private ColorRGBA parseColor(String colorStr) {
+        String[] rgba = colorStr.split(",");
+        float r = Float.parseFloat(rgba[0]);
+        float g = Float.parseFloat(rgba[1]);
+        float b = Float.parseFloat(rgba[2]);
+        float a = Float.parseFloat(rgba[3]);
+        return new ColorRGBA(r, g, b, a);
+    }
+
+    private MatOpt readMatConfig(String path) {
+        return new Gson().fromJson(inputReader(path), MatOpt.class);
+    }
+
+    private enum VarType {
+        FLOAT,
+        VECTOR,
+        BOOLEAN,
+        COLOR,
+        INT
+    }
+
+    public Material getMaterial(String mat) {
+        return materials.get(mat);
+    }
+}

@@ -1,0 +1,49 @@
+{
+  "matDef": "Common/MatDefs/Post/BloomExtract.j3md",
+  "textures": [
+    {
+      "textureParam": "Texture",
+      "regOptions": {
+        "texture": "cracked_soil_BaseColor.jpg",
+        "wrap": "Repeat"
+      }
+    },
+    {
+      "textureParam": "GlowMap",
+      "regOptions": {
+        "texture": "cracked_soil_AmbientOcclusion.jpg",
+        "wrap": "Repeat"
+      }
+    }
+  ],
+  "vars": [
+    {
+      "varName": "NumSamples",
+      "varOpt": {
+        "type": "int",
+        "value": 12
+      }
+    },
+    {
+      "varName": "ExposurePow",
+      "varOpt": {
+        "type": "float",
+        "value": 1
+      }
+    },
+    {
+      "varName": "ExposureCutoff",
+      "varOpt": {
+        "type": "float",
+        "value": 1
+      }
+    },
+    {
+      "varName": "Extract",
+      "varOpt": {
+        "type": "boolean",
+        "value": true
+      }
+    }
+  ]
+}
