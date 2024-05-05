@@ -40,7 +40,7 @@ private final FrozenLands frozenLands;
         String baseDir = matDir + dir + '/';
         MatOpt matOpt = readMatConfig(baseDir + "matOpt/" + type + ".json");
         initMaterial(matOpt.getMatDef());
-        getMaterial().setName(dir);
+        getMaterial().setName(dir + '#' + type);
         for(TextureInstance textureInstance: matOpt.getTextures()){
             //materialDef = (MaterialDef) frozenLands.getAssetManager().loadAsset(matOpt.getMatDef());
                 Texture thisTexture = getFrozenLands().getAssetManager().loadTexture(baseDir + "textures/" + textureInstance.getRegOptions().getTexture());

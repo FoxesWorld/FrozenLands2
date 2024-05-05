@@ -18,7 +18,6 @@ import jme3utilities.sky.SkyControl;
 import jme3utilities.sky.StarsOption;
 import jme3utilities.sky.Updater;
 import org.foxesworld.FrozenLands;
-import org.foxesworld.engine.Engine;
 
 public class Sky {
 

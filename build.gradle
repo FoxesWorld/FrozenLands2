@@ -37,7 +37,7 @@ dependencies {
     // You can read more about how to add dependencies here:
     //   https://docs.gradle.org/current/userguide/dependency_management.html#sec:how_to_declare_your_dependencies
 
-    implementation files('lib/org.foxesworld/cfgProvider-2.1.3-STABLE.jar')
+    implementation files('lib/foxesworld/cfgProvider-2.1.3-STABLE.jar')
     implementation files('lib/java-discord-rpc-2.0.2-all.jar')
     implementation files('lib/SkyControl-1.0.4.jar')
     implementation 'com.github.stephengold:j-ogg-vorbis:1.0.4'

@@ -1,10 +1,10 @@
 package org.foxesworld;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.math.FastMath;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
 import com.jme3.system.AppSettings;
 import org.apache.logging.log4j.LogManager;
@@ -30,26 +30,21 @@ public class FrozenLands extends SimpleApplication {
         cfg.setTitle("FrozenLands");
         setIcon(cfg);
         app.start();
-
     }
 
     @Override
     public void simpleInitApp() {
-        this.engine = new Engine(this);
+        this.engine = new Engine(this, "userInput");
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         stateManager.attach(this.engine);
 
-        Quad quadMesh = new Quad(10, 10);
+        Quad quadMesh = new Quad(100, 100);
         Geometry ground = new Geometry("Ground", quadMesh);
-        ground.setMaterial(engine.getMaterialProvider().getMaterial("color#green"));
+        ground.setMaterial(engine.getMaterialProvider().getMaterial("terrain#default"));
 
         ground.rotate(-FastMath.HALF_PI, 0, 0);
         rootNode.attachChild(ground);
-
-        Player player = new Player(this.engine);
-        player.setLocalTranslation(0, 1, 0);
-        rootNode.attachChild(player);
     }
 
     private static void setIcon(AppSettings settings) {
@@ -63,14 +58,16 @@ public class FrozenLands extends SimpleApplication {
         } catch (IOException ignored) {
         }
     }
-    private class Player extends Geometry {
-        public Player(Engine engine) {
-            super("Player", new Box(0.5f, 1, 0.5f));
-            setMaterial(engine.getMaterialProvider().getMaterial("color#pink"));
-        }
-    }
 
     public Engine getEngine() {
         return engine;
+    }
+
+    public BulletAppState getBulletAppState() {
+        return bulletAppState;
+    }
+
+    public AppStateManager getStateManager() {
+        return this.stateManager;
     }
 }

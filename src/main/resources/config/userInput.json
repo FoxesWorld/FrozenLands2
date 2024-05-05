@@ -1,0 +1,64 @@
+{
+  "mouseButtons": [
+    {
+      "inputName": "Attack",
+      "inputKey": 0
+    }
+  ],
+  "keyBoard": [
+    {
+      "inputName": "Inventory",
+      "inputKey": 18
+    },
+    {
+      "inputName": "Left",
+      "inputKey": 30
+    },
+    {
+      "inputName": "Right",
+      "inputKey": 32
+    },
+    {
+      "inputName": "Up",
+      "inputKey": 17
+    },
+    {
+      "inputName": "Down",
+      "inputKey": 31
+    },
+    {
+      "inputName": "Run",
+      "inputKey": 42
+    },
+    {
+      "inputName": "Jump",
+      "inputKey": 57
+    },
+    {
+      "inputName": "Crouch",
+      "inputKey": 40
+    }
+  ],
+  "mouseAxis": [
+    {
+      "inputName": "Rotate_Left",
+      "inputKey": 0,
+      "negative": true
+    },
+    {
+      "inputName": "Rotate_Right",
+      "inputKey": 0,
+      "negative": false
+    },
+    {
+      "inputName": "Rotate_Up",
+      "inputKey": 1,
+      "negative": false
+    },
+    {
+      "inputName": "Rotate_Down",
+      "inputKey": 1,
+      "negative": true
+    }
+  ]
+}

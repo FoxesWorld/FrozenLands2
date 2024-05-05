@@ -1,0 +1,56 @@
+{
+  "matDef": "Common/MatDefs/Terrain/Terrain.j3md",
+  "textures": [
+    {
+      "textureParam": "Alpha",
+      "regOptions": {
+        "texture": "alphamap_horizon.png",
+        "wrap": "Repeat"
+      }
+    },
+    {
+      "textureParam": "Tex1",
+      "regOptions": {
+        "texture": "region2/snow-field-diff.jpg",
+        "wrap": "Repeat"
+      }
+    },
+    {
+      "textureParam": "Tex2",
+      "regOptions": {
+        "texture": "region1/snow-diff.jpg",
+        "wrap": "Repeat"
+      }
+    },
+    {
+      "textureParam": "Tex3",
+      "regOptions": {
+        "texture": "region2/snow-field-diff.jpg",
+        "wrap": "Repeat"
+      }
+    }
+  ],
+  "params": [
+    {
+      "paramName": "Tex1Scale",
+      "paramOpt": {
+        "type": "float",
+        "value": 64
+      }
+    },
+    {
+      "paramName": "Tex2Scale",
+      "paramOpt": {
+        "type": "float",
+        "value": 64
+      }
+    },
+    {
+      "paramName": "Tex3Scale",
+      "paramOpt": {
+        "type": "float",
+        "value": 64
+      }
+    }
+  ]
+}
