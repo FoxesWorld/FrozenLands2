@@ -7,6 +7,7 @@ import org.foxesworld.engine.config.Config;
 import org.foxesworld.engine.providers.material.MaterialProvider;
 import org.foxesworld.engine.providers.sound.SoundProvider;
 import org.foxesworld.engine.sky.Sky;
+import org.foxesworld.engine.terrain.TerrainGen;
 
 public class Engine extends BaseAppState {
 
@@ -15,6 +16,7 @@ public class Engine extends BaseAppState {
     private final FrozenLands frozenLands;
     private final Sky sky;
     protected MaterialProvider materialProvider;
+    protected TerrainGen terrainGen;
     protected SoundProvider soundProvider;
 
     public  Engine(FrozenLands frozenLands, String configFiles) {
@@ -22,6 +24,7 @@ public class Engine extends BaseAppState {
         this.configFiles = configFiles;
         this.materialProvider = new MaterialProvider(this.frozenLands);
         this.materialProvider.loadMaterials("materials.json");
+        this.terrainGen = new TerrainGen(this);
 
         this.soundProvider = new SoundProvider(this.frozenLands);
         this.soundProvider.loadSounds("sounds.json");
@@ -60,5 +63,13 @@ public class Engine extends BaseAppState {
 
     public Config getConfig() {
         return config;
+    }
+
+    public FrozenLands getFrozenLands() {
+        return frozenLands;
+    }
+
+    public TerrainGen getTerrainGen() {
+        return terrainGen;
     }
 }

@@ -4,6 +4,10 @@
     "matType": "default"
   },
   {
+    "matName": "terrain",
+    "matType": "leaves"
+  },
+  {
     "matName": "color",
     "matType": "green"
   },

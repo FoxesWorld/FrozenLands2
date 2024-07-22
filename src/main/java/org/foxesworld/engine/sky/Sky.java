@@ -47,7 +47,7 @@ public class Sky {
         dlsr.setLight(sun);
 
         Spatial sky = SkyFactory.createSky(assetManager, skyTexture, SkyFactory.EnvMapType.CubeMap);
-        sky.setShadowMode(RenderQueue.ShadowMode.Off);
+        sky.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         rootNode.attachChild(sky);
         SkyControl skyControl = new SkyControl(assetManager, camera, .5f, StarsOption.TopDome, true);
         rootNode.addControl(skyControl);

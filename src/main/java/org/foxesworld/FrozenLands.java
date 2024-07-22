@@ -4,6 +4,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.math.FastMath;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
 import com.jme3.system.AppSettings;
@@ -39,12 +40,12 @@ public class FrozenLands extends SimpleApplication {
         stateManager.attach(bulletAppState);
         stateManager.attach(this.engine);
 
-        Quad quadMesh = new Quad(100, 100);
-        Geometry ground = new Geometry("Ground", quadMesh);
-        ground.setMaterial(engine.getMaterialProvider().getMaterial("terrain#default"));
+        Quad quad = new Quad(100, 100);
+        Geometry geom = new Geometry("Plane", quad);
+        geom.setMaterial(this.engine.getMaterialProvider().getMaterial("terrain#default"));
+        geom.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
 
-        ground.rotate(-FastMath.HALF_PI, 0, 0);
-        rootNode.attachChild(ground);
+        rootNode.attachChild(geom);
     }
 
     private static void setIcon(AppSettings settings) {

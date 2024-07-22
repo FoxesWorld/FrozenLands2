@@ -15,7 +15,7 @@ import java.util.Map;
 public class Config extends org.foxesworld.engine.config.abs.Config {
 
     public Config(Engine engine) {
-        setCfgExportDir("config/");
+        setCfgExportDir("config");
         setDirPathIndex(3);
         setCfgFileExtension(".json");
         CfgProvider.setDefaultConfFilesDir("config/");
