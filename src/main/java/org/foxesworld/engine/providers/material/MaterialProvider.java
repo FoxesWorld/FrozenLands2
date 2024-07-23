@@ -29,8 +29,11 @@ public class MaterialProvider extends MaterialAbstract {
     public void loadMaterials(String path) {
         FrozenLands.logger.info("Adding materials");
         for (Materials mat : new Gson().fromJson(inputReader(path), Materials[].class)) {
-            FrozenLands.logger.info("Adding '" + mat.getMatName() + "' material of type " + mat.getMatType());
-            materials.put(mat.getMatName() + '#' + mat.getMatType(), createMat(mat.getMatName(), mat.getMatType()));
+            for(String subMat: mat.getSubMats()){
+                FrozenLands.logger.info("Adding '" + mat.getMatName() + "' material of type " +subMat);
+                materials.put(mat.getMatName() + '#' + subMat, createMat(mat.getMatName(), subMat));
+            }
+
         }
 
         FrozenLands.logger.info("Finished adding materials, total matAmount: " + materials.size());

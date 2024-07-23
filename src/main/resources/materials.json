@@ -1,22 +1,22 @@
 [
   {
     "matName": "terrain",
-    "matType": "default"
+    "subMats": [
+      "default",
+      "leaves"
+    ]
+  },
+  {
+    "matName": "color",
+    "subMats": [
+      "green",
+      "pink"
+    ]
   },
   {
     "matName": "vulpine",
-    "matType": "maleHead"
-  },
-  {
-    "matName": "terrain",
-    "matType": "leaves"
-  },
-  {
-    "matName": "color",
-    "matType": "green"
-  },
-  {
-    "matName": "color",
-    "matType": "pink"
+    "subMats": [
+      "maleHead"
+    ]
   }
 ]

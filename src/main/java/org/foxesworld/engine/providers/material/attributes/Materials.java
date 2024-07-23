@@ -1,13 +1,16 @@
 package org.foxesworld.engine.providers.material.attributes;
 
+import java.util.List;
+
 public class Materials {
-    private  String matName, matType;
+    private  String matName;
+    private List<String> subMats;
 
     public String getMatName() {
         return matName;
     }
 
-    public String getMatType() {
-        return matType;
+    public List<String> getSubMats() {
+        return subMats;
     }
 }
