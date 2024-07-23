@@ -1,0 +1,21 @@
+{
+  "matDef": "Common/MatDefs/Misc/Unshaded.j3md",
+  "textures": [
+    {
+      "textureParam": "ColorMap",
+      "regOptions": {
+        "texture": "Vulpine/VulpineMaleHead_D.dds",
+        "wrap": "Repeat"
+      }
+    }
+  ],
+  "matParams": [
+    {
+      "paramName": "PointSize",
+      "paramOpt": {
+        "type": "float",
+        "value": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "matDef": "Common/MatDefs/Light/Lighting.j3md",
+  "textures": [
+    {
+      "textureParam": "DiffuseMap",
+      "regOptions": {
+        "texture": "leaves/BlastedForestFallenLeaves01_d.dds",
+        "wrap": "Repeat"
+      }
+    },
+    {
+      "textureParam": "NormalMap",
+      "regOptions": {
+        "texture": "leaves/BlastedForestFallenLeaves01_n.dds",
+        "wrap": "Repeat"
+      }
+    },
+    {
+      "textureParam": "SpecularMap",
+      "regOptions": {
+        "texture": "leaves/BlastedForestFallenLeaves01_s.dds",
+        "wrap": "Repeat"
+      }
+    }
+  ],
+  "matParams": [
+    {
+      "paramName": "UseMaterialColors",
+      "paramOpt": {
+        "type": "boolean",
+        "value": true
+      }
+    },
+    {
+      "paramName": "Shininess",
+      "paramOpt": {
+        "type": "float",
+        "value": 32
+      }
+    },
+    {
+      "paramName": "Ambient",
+      "paramOpt": {
+        "type": "color",
+        "value": "1,1,1,1"
+      }
+    },
+    {
+      "paramName": "Diffuse",
+      "paramOpt": {
+        "type": "color",
+        "value": "1,1,1,1"
+      }
+    },
+    {
+      "paramName": "Specular",
+      "paramOpt": {
+        "type": "color",
+        "value": "1,1,1,1"
+      }
+    }
+  ]
+}

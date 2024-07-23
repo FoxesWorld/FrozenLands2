@@ -6,7 +6,6 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.texture.Texture;
-import com.jme3.util.SkyFactory;
 import org.foxesworld.FrozenLands;
 import org.foxesworld.engine.providers.material.attributes.*;
 
@@ -16,7 +15,7 @@ import java.util.Map;
 import static org.foxesworld.engine.utils.InputReader.inputReader;
 
 public class MaterialProvider extends MaterialAbstract {
-    private final String matDir = "textures/materials/";
+    private final String matDir = "Materials/";
     private final Map<String, Material> materials = new HashMap<>();
     private final FrozenLands frozenLands;
 
@@ -44,12 +43,12 @@ public class MaterialProvider extends MaterialAbstract {
         int textureNum = 0, varNum = 0;
         //MaterialDef materialDef = null;
         String baseDir = matDir + dir + '/';
-        MatOpt matOpt = readMatConfig(baseDir + "matOpt/" + type + ".json");
+        MatOpt matOpt = readMatConfig(baseDir + "/" + type + ".fgsm");
         initMaterial(matOpt.getMatDef());
         getMaterial().setName(dir + '#' + type);
         for (TextureInstance textureInstance : matOpt.getTextures()) {
             //materialDef = (MaterialDef) frozenLands.getAssetManager().loadAsset(matOpt.getMatDef());
-            TextureKey key = new TextureKey(baseDir + "textures/" + textureInstance.getRegOptions().getTexture(), false);
+            TextureKey key = new TextureKey("textures/" + textureInstance.getRegOptions().getTexture(), false);
             key.setGenerateMips(false);
             //if (envMapType == SkyFactory.EnvMapType.CubeMap) {
             //    key.setTextureTypeHint(Texture.Type.CubeMap);
