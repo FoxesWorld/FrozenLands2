@@ -5,28 +5,44 @@
       "textureParam": "Alpha",
       "regOptions": {
         "texture": "alphamap_horizon.png",
-        "wrap": "Repeat"
+        "wrap": "Repeat",
+        "uvSize": {
+            "width": 1500,
+            "height": 1500
+        }
       }
     },
     {
       "textureParam": "Tex1",
       "regOptions": {
         "texture": "region2/snow-field-diff.jpg",
-        "wrap": "Repeat"
+        "wrap": "Repeat",
+        "uvSize": {
+            "width": 4096,
+            "height": 4096
+        }
       }
     },
     {
       "textureParam": "Tex2",
       "regOptions": {
         "texture": "region1/snow-diff.jpg",
-        "wrap": "Repeat"
+        "wrap": "Repeat",
+        "uvSize": {
+            "width": 4096,
+            "height": 4096
+        }
       }
     },
     {
       "textureParam": "Tex3",
       "regOptions": {
         "texture": "region2/snow-field-diff.jpg",
-        "wrap": "Repeat"
+        "wrap": "Repeat",
+        "uvSize": {
+            "width": 4096,
+            "height": 4096
+        }
       }
     }
   ],

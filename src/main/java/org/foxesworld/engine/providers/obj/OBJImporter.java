@@ -1,31 +1,22 @@
 package org.foxesworld.engine.providers.obj;
 
-import com.jme3.asset.AssetInfo;
-import com.jme3.asset.AssetLoader;
-import com.jme3.asset.ModelKey;
+import com.jme3.asset.*;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.*;
+import com.jme3.texture.Texture;
 import com.jme3.util.BufferUtils;
-import com.jme3.util.TangentBinormalGenerator;
 import org.apache.logging.log4j.Logger;
 import org.foxesworld.FrozenLands;
+import org.foxesworld.engine.providers.obj.utils.MeshUtils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-/**
- * OBJ-importer JME 3.1.6
- */
 public class OBJImporter implements AssetLoader {
 
     private static final Logger logger = FrozenLands.logger;
@@ -38,21 +29,24 @@ public class OBJImporter implements AssetLoader {
 
         ModelKey modelKey = (ModelKey) assetInfo.getKey();
         String objFilePath = modelKey.getName();
+        String objDir = objFilePath.substring(0, objFilePath.lastIndexOf('/'));
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(assetInfo.openStream()))) {
-            // Парсим OBJ-файл
             Map<Integer, Vector3f> vertices = new HashMap<>();
             Map<Integer, Vector3f> normals = new HashMap<>();
             Map<Integer, Vector2f> texCoords = new HashMap<>();
             List<Face> faces = new ArrayList<>();
 
+            Map<String, MaterialData> materials = new HashMap<>();
+            String currentMaterial = null;
+
             String line;
-            int vertexIndex = 0;
-            int normalIndex = 0;
-            int texCoordIndex = 0;
+            int vertexIndex = 1;
+            int normalIndex = 1;
+            int texCoordIndex = 1;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\\s+");
-                if (parts.length == 0) {
+                if (parts.length == 0 || line.startsWith("#")) {
                     continue;
                 }
 
@@ -65,25 +59,21 @@ public class OBJImporter implements AssetLoader {
                         for (int i = 1; i < parts.length; i++) {
                             String[] indices = parts[i].split("/");
                             try {
-                                vertexIndex = Integer.parseInt(indices[0]);
-                                texCoordIndex = indices.length > 1 && !indices[1].isEmpty() ? Integer.parseInt(indices[1]) : 0;
-                                normalIndex = indices.length > 2 && !indices[2].isEmpty() ? Integer.parseInt(indices[2]) : 0;
-                                face.add(vertexIndex, texCoordIndex, normalIndex);
+                                int vIndex = Integer.parseInt(indices[0]);
+                                int tIndex = indices.length > 1 && !indices[1].isEmpty() ? Integer.parseInt(indices[1]) : 0;
+                                int nIndex = indices.length > 2 && !indices[2].isEmpty() ? Integer.parseInt(indices[2]) : 0;
+                                face.add(vIndex, tIndex, nIndex);
                             } catch (NumberFormatException ex) {
-                                // Проверяем, есть ли десятичная точка
-                                if (indices[0].contains(".")) {
-                                    // Преобразуем в float, но игнорируем дробную часть
-                                    vertexIndex = (int) Math.floor(Float.parseFloat(indices[0]));
-                                    texCoordIndex = indices.length > 1 && !indices[1].isEmpty() ? Integer.parseInt(indices[1]) : 0;
-                                    normalIndex = indices.length > 2 && !indices[2].isEmpty() ? Integer.parseInt(indices[2]) : 0;
-                                    face.add(vertexIndex, texCoordIndex, normalIndex);
-                                } else {
-                                    logger.warn("Invalid index: " + indices[0]);
-                                }
+                                logger.warn("Invalid index: " + indices[0]);
                             }
                         }
                         faces.add(face);
                     }
+                    case "mtllib" -> {
+                        String mtlFilePath = parts[1];
+                        loadMTL(assetInfo.getManager(), objDir + '/' + mtlFilePath, materials);
+                    }
+                    case "usemtl" -> currentMaterial = parts[1];
                 }
             }
 
@@ -96,19 +86,23 @@ public class OBJImporter implements AssetLoader {
             vertexBuffer.flip();
             mesh.setBuffer(VertexBuffer.Type.Position, 3, vertexBuffer);
 
-            FloatBuffer normalBuffer = BufferUtils.createFloatBuffer(normals.size() * 3);
-            for (Vector3f normal : normals.values()) {
-                normalBuffer.put(normal.getX()).put(normal.getY()).put(normal.getZ());
+            if (!normals.isEmpty()) {
+                FloatBuffer normalBuffer = BufferUtils.createFloatBuffer(normals.size() * 3);
+                for (Vector3f normal : normals.values()) {
+                    normalBuffer.put(normal.getX()).put(normal.getY()).put(normal.getZ());
+                }
+                normalBuffer.flip();
+                mesh.setBuffer(VertexBuffer.Type.Normal, 3, normalBuffer);
             }
-            normalBuffer.flip();
-            mesh.setBuffer(VertexBuffer.Type.Normal, 3, normalBuffer);
 
-            FloatBuffer texCoordBuffer = BufferUtils.createFloatBuffer(texCoords.size() * 2);
-            for (Vector2f texCoord : texCoords.values()) {
-                texCoordBuffer.put(texCoord.getX()).put(texCoord.getY());
+            if (!texCoords.isEmpty()) {
+                FloatBuffer texCoordBuffer = BufferUtils.createFloatBuffer(texCoords.size() * 2);
+                for (Vector2f texCoord : texCoords.values()) {
+                    texCoordBuffer.put(texCoord.getX()).put(texCoord.getY());
+                }
+                texCoordBuffer.flip();
+                mesh.setBuffer(VertexBuffer.Type.TexCoord, 2, texCoordBuffer);
             }
-            texCoordBuffer.flip();
-            mesh.setBuffer(VertexBuffer.Type.TexCoord, 2, texCoordBuffer);
 
             IntBuffer indexBuffer = BufferUtils.createIntBuffer(faces.size() * 3);
             for (Face face : faces) {
@@ -119,11 +113,16 @@ public class OBJImporter implements AssetLoader {
             indexBuffer.flip();
             mesh.setBuffer(VertexBuffer.Type.Index, 3, indexBuffer);
 
-            TangentBinormalGenerator.generate(mesh);
+            if (!normals.isEmpty() && !texCoords.isEmpty()) {
+                MeshUtils.computeTangentBinormal(mesh);
+            }
 
             Geometry geometry = new Geometry("OBJGeometry", mesh);
-            Material material = new Material(assetInfo.getManager(), "Common/MatDefs/Light/Lighting.j3md");
-            material.setColor("Diffuse", ColorRGBA.White);
+            Material material = createMaterial(assetInfo.getManager(), objDir, materials.get(currentMaterial));
+            if (material == null) {
+                material = new Material(assetInfo.getManager(), "Common/MatDefs/Light/Lighting.j3md");
+                material.setColor("Diffuse", ColorRGBA.White);
+            }
             geometry.setMaterial(material);
 
             Node rootNode = new Node("OBJRootNode");
@@ -137,39 +136,71 @@ public class OBJImporter implements AssetLoader {
         }
     }
 
-    private static class Face {
-        private List<Vertex> vertices = new ArrayList<>();
+    private void loadMTL(AssetManager assetManager, String mtlFilePath, Map<String, MaterialData> materials) {
+        try {
+            InputStream mtlStream = assetManager.locateAsset(new AssetKey<>(mtlFilePath)).openStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(mtlStream));
+            String line;
+            String currentMaterial = null;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\s+");
+                if (parts.length == 0 || line.startsWith("#")) {
+                    continue;
+                }
 
-        public void add(int vertexIndex, int texCoordIndex, int normalIndex) {
-            vertices.add(new Vertex(vertexIndex, texCoordIndex, normalIndex));
-        }
-
-        public List<Vertex> getVertices() {
-            return vertices;
+                switch (parts[0]) {
+                    case "newmtl":
+                        currentMaterial = parts[1];
+                        materials.put(currentMaterial, new MaterialData());
+                        break;
+                    case "Ka":
+                        if (currentMaterial != null) {
+                            materials.get(currentMaterial).setAmbientColor(new ColorRGBA(Float.parseFloat(parts[1]), Float.parseFloat(parts[2]), Float.parseFloat(parts[3]), 1f));
+                        }
+                        break;
+                    case "Kd":
+                        if (currentMaterial != null) {
+                            materials.get(currentMaterial).setDiffuseColor(new ColorRGBA(Float.parseFloat(parts[1]), Float.parseFloat(parts[2]), Float.parseFloat(parts[3]), 1f));
+                        }
+                        break;
+                    case "Ks":
+                        if (currentMaterial != null) {
+                            materials.get(currentMaterial).setSpecularColor(new ColorRGBA(Float.parseFloat(parts[1]), Float.parseFloat(parts[2]), Float.parseFloat(parts[3]), 1f));
+                        }
+                        break;
+                    case "Ns":
+                        if (currentMaterial != null) {
+                            materials.get(currentMaterial).setShininess(Float.parseFloat(parts[1]));
+                        }
+                        break;
+                    case "map_Kd":
+                        if (currentMaterial != null) {
+                            materials.get(currentMaterial).setDiffuseMap(parts[1]);
+                        }
+                        break;
+                }
+            }
+            reader.close();
+        } catch (IOException ex) {
+            logger.error("Error loading MTL file: " + mtlFilePath, ex);
         }
     }
 
-    private static class Vertex {
-        private int vertexIndex;
-        private int texCoordIndex;
-        private int normalIndex;
+    private Material createMaterial(AssetManager assetManager, String objDir, MaterialData materialData) {
+        if (materialData == null) {
+            return null;
+        }
+        Material material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        material.setColor("Ambient", materialData.getAmbientColor());
+        material.setColor("Diffuse", materialData.getDiffuseColor());
+        material.setColor("Specular", materialData.getSpecularColor());
+        material.setFloat("Shininess", materialData.getShininess());
 
-        public Vertex(int vertexIndex, int texCoordIndex, int normalIndex) {
-            this.vertexIndex = vertexIndex;
-            this.texCoordIndex = texCoordIndex;
-            this.normalIndex = normalIndex;
+        if (materialData.getDiffuseMap() != null) {
+            Texture texture = assetManager.loadTexture(materialData.getDiffuseMap());
+            material.setTexture("DiffuseMap", texture);
         }
 
-        public int getVertexIndex() {
-            return vertexIndex;
-        }
-
-        public int getTexCoordIndex() {
-            return texCoordIndex;
-        }
-
-        public int getNormalIndex() {
-            return normalIndex;
-        }
+        return material;
     }
 }

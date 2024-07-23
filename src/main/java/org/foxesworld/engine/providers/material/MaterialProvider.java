@@ -5,7 +5,9 @@ import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.texture.Image;
 import com.jme3.texture.Texture;
+import com.jme3.texture.Texture2D;
 import org.foxesworld.FrozenLands;
 import org.foxesworld.engine.providers.material.attributes.*;
 
@@ -47,16 +49,15 @@ public class MaterialProvider extends MaterialAbstract {
         initMaterial(matOpt.getMatDef());
         getMaterial().setName(dir + '#' + type);
         for (TextureInstance textureInstance : matOpt.getTextures()) {
-            //materialDef = (MaterialDef) frozenLands.getAssetManager().loadAsset(matOpt.getMatDef());
             TextureKey key = new TextureKey("textures/" + textureInstance.getRegOptions().getTexture(), false);
             key.setGenerateMips(false);
-            //if (envMapType == SkyFactory.EnvMapType.CubeMap) {
-            //    key.setTextureTypeHint(Texture.Type.CubeMap);
-            //}
-            Texture thisTexture = this.frozenLands.getAssetManager().loadTexture(key);
+
+            Image image = frozenLands.getAssetManager().loadTexture(key).getImage();
+            image.setHeight(textureInstance.getRegOptions().getUvSize().getHeight());
+            image.setWidth(textureInstance.getRegOptions().getUvSize().getWidth());
+            Texture thisTexture = new Texture2D(image);
+            thisTexture.setName(key.getName());
             thisTexture.setWrap(Texture.WrapMode.valueOf(textureInstance.getRegOptions().getWrap()));
-            // TODO
-            // Image Size can be set here
             getMaterial().setTexture(textureInstance.textureParam(), thisTexture);
             textureNum++;
             FrozenLands.logger.info("Adding {} texture to {}", thisTexture, dir);
@@ -75,7 +76,6 @@ public class MaterialProvider extends MaterialAbstract {
         VarType inputType = VarType.valueOf(varOption.getParamOpt().getType().toUpperCase());
         String paramName = varOption.getParamName();
         Object value = varOption.getParamOpt().getValue();
-        System.out.println(value);
         switch (inputType) {
             case FLOAT -> setMaterialFloat(paramName, Integer.parseInt((String) value));
             case BOOLEAN -> setMaterialBoolean(paramName, Boolean.getBoolean((String) value));

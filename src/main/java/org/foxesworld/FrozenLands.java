@@ -45,15 +45,8 @@ public class FrozenLands extends SimpleApplication {
         stateManager.attach(this.engine);
         this.flyCam.setMoveSpeed(128);
 
-        Quad quad = new Quad(100, 100);
-        Geometry geom = new Geometry("Plane", quad);
-        geom.setMaterial(this.engine.getMaterialProvider().getMaterial("terrain#default"));
-        geom.setShadowMode(RenderQueue.ShadowMode.Receive);
-
-        rootNode.attachChild(geom);
-
         Spatial model = assetManager.loadModel("meshes/Vulpine/VulpineHead.obj");
-        model.setMaterial(this.engine.getMaterialProvider().getMaterial("vulpine#maleHead"));
+        //model.setMaterial(this.engine.getMaterialProvider().getMaterial("vulpine#maleHead"));
         rootNode.attachChild(model);
     }
 

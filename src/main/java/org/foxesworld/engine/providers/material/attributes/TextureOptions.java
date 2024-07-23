@@ -3,7 +3,7 @@ package org.foxesworld.engine.providers.material.attributes;
 public class TextureOptions {
     private String texture;
     private String wrap;
-    private String textureScale;
+    private UvSize uvSize;
 
     public String getTexture() {
         return texture;
@@ -13,7 +13,7 @@ public class TextureOptions {
         return wrap;
     }
 
-    public String getTextureScale() {
-        return textureScale;
+    public UvSize getUvSize() {
+        return uvSize;
     }
 }

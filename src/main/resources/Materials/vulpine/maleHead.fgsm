@@ -5,7 +5,11 @@
       "textureParam": "ColorMap",
       "regOptions": {
         "texture": "Vulpine/VulpineMaleHead_D.dds",
-        "wrap": "Repeat"
+        "wrap": "Repeat",
+        "uvSize": {
+            "width": 2048,
+            "height": 2048
+        }
       }
     }
   ],

@@ -5,21 +5,33 @@
       "textureParam": "DiffuseMap",
       "regOptions": {
         "texture": "leaves/BlastedForestFallenLeaves01_d.dds",
-        "wrap": "Repeat"
+        "wrap": "Repeat",
+        "uvSize": {
+            "width": 128,
+            "height": 128
+        }
       }
     },
     {
       "textureParam": "NormalMap",
       "regOptions": {
         "texture": "leaves/BlastedForestFallenLeaves01_n.dds",
-        "wrap": "Repeat"
+        "wrap": "Repeat",
+        "uvSize": {
+            "width": 128,
+            "height": 128
+        }
       }
     },
     {
       "textureParam": "SpecularMap",
       "regOptions": {
         "texture": "leaves/BlastedForestFallenLeaves01_s.dds",
-        "wrap": "Repeat"
+        "wrap": "Repeat",
+        "uvSize": {
+            "width": 128,
+            "height": 128
+        }
       }
     }
   ],
