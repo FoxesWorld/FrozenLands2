@@ -5,6 +5,7 @@ import com.jme3.app.state.BaseAppState;
 import org.foxesworld.FrozenLands;
 import org.foxesworld.engine.config.Config;
 import org.foxesworld.engine.providers.material.MaterialProvider;
+import org.foxesworld.engine.providers.obj.OBJImporter;
 import org.foxesworld.engine.providers.sound.SoundProvider;
 import org.foxesworld.engine.sky.Sky;
 import org.foxesworld.engine.terrain.TerrainGen;
@@ -22,6 +23,7 @@ public class Engine extends BaseAppState {
     public  Engine(FrozenLands frozenLands, String configFiles) {
         this.frozenLands = frozenLands;
         this.configFiles = configFiles;
+        this.getFrozenLands().getAssetManager().registerLoader(OBJImporter.class, "obj");
         this.materialProvider = new MaterialProvider(this.frozenLands);
         this.materialProvider.loadMaterials("materials.json");
         this.terrainGen = new TerrainGen(this);

@@ -30,7 +30,7 @@
       }
     }
   ],
-  "params": [
+  "matParams": [
     {
       "paramName": "Tex1Scale",
       "paramOpt": {

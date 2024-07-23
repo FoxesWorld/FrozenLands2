@@ -2,7 +2,7 @@
   "matDef": "Common/MatDefs/Misc/Unshaded.j3md",
   "textures": [
   ],
-  "params": [
+  "matParams": [
     {
       "paramName": "Color",
       "paramOpt": {

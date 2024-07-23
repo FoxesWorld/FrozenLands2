@@ -4,6 +4,10 @@
     "matType": "default"
   },
   {
+    "matName": "vulpine",
+    "matType": "maleHead"
+  },
+  {
     "matName": "terrain",
     "matType": "leaves"
   },

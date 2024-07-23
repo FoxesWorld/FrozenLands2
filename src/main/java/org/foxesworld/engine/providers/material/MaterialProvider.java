@@ -73,6 +73,7 @@ public class MaterialProvider extends MaterialAbstract {
         VarType inputType = VarType.valueOf(varOption.getParamOpt().getType().toUpperCase());
         String paramName = varOption.getParamName();
         Object value = varOption.getParamOpt().getValue();
+        System.out.println(value);
         switch (inputType) {
             case FLOAT -> setMaterialFloat(paramName, Integer.parseInt((String) value));
             case BOOLEAN -> setMaterialBoolean(paramName, Boolean.getBoolean((String) value));

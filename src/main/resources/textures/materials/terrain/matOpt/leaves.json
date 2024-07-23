@@ -1,55 +1,62 @@
 {
-  "matDef": "Common/MatDefs/Terrain/Terrain.j3md",
+  "matDef": "Common/MatDefs/Light/Lighting.j3md",
   "textures": [
     {
-      "textureParam": "Alpha",
-      "regOptions": {
-        "texture": "alphamap_horizon.png",
-        "wrap": "Repeat"
-      }
-    },
-    {
-      "textureParam": "Tex1",
+      "textureParam": "DiffuseMap",
       "regOptions": {
         "texture": "leaves/BlastedForestFallenLeaves01_d.dds",
         "wrap": "Repeat"
       }
     },
     {
-      "textureParam": "Tex2",
+      "textureParam": "NormalMap",
       "regOptions": {
-        "texture": "region1/snow-diff.jpg",
+        "texture": "leaves/BlastedForestFallenLeaves01_n.dds",
         "wrap": "Repeat"
       }
     },
     {
-      "textureParam": "Tex3",
+      "textureParam": "SpecularMap",
       "regOptions": {
-        "texture": "region2/snow-field-diff.jpg",
+        "texture": "leaves/BlastedForestFallenLeaves01_s.dds",
         "wrap": "Repeat"
       }
     }
   ],
-  "params": [
+  "matParams": [
     {
-      "paramName": "Tex1Scale",
+      "paramName": "UseMaterialColors",
       "paramOpt": {
-        "type": "float",
-        "value": 64
+        "type": "boolean",
+        "value": true
       }
     },
     {
-      "paramName": "Tex2Scale",
+      "paramName": "Shininess",
       "paramOpt": {
         "type": "float",
-        "value": 64
+        "value": 32
       }
     },
     {
-      "paramName": "Tex3Scale",
+      "paramName": "Ambient",
       "paramOpt": {
-        "type": "float",
-        "value": 64
+        "type": "color",
+        "value": "1,1,1,1"
+      }
+    },
+    {
+      "paramName": "Diffuse",
+      "paramOpt": {
+        "type": "color",
+        "value": "1,1,1,1"
+      }
+    },
+    {
+      "paramName": "Specular",
+      "paramOpt": {
+        "type": "color",
+        "value": "1,1,1,1"
       }
     }
   ]
