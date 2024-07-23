@@ -21,7 +21,7 @@ import org.foxesworld.FrozenLands;
 
 public class Sky {
 
-    private  String skyTexture = "textures/environment/skyBox.dds";
+    private  String skyTexture = "textures/world/environment/skyBox.dds";
     private Vector3f sunDirection = new Vector3f(-1f, -1f, -1f);
     private ColorRGBA sunColor = ColorRGBA.White;
     private ColorRGBA ambientColor = ColorRGBA.DarkGray;

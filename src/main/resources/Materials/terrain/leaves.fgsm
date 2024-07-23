@@ -4,7 +4,7 @@
     {
       "textureParam": "DiffuseMap",
       "regOptions": {
-        "texture": "leaves/BlastedForestFallenLeaves01_d.dds",
+        "texture": "world/ground/leaves/BlastedForestFallenLeaves01_d.dds",
         "wrap": "Repeat",
         "uvSize": {
             "width": 128,
@@ -15,7 +15,7 @@
     {
       "textureParam": "NormalMap",
       "regOptions": {
-        "texture": "leaves/BlastedForestFallenLeaves01_n.dds",
+        "texture": "world/ground/leaves/BlastedForestFallenLeaves01_n.dds",
         "wrap": "Repeat",
         "uvSize": {
             "width": 128,
@@ -26,7 +26,7 @@
     {
       "textureParam": "SpecularMap",
       "regOptions": {
-        "texture": "leaves/BlastedForestFallenLeaves01_s.dds",
+        "texture": "world/ground/leaves/BlastedForestFallenLeaves01_s.dds",
         "wrap": "Repeat",
         "uvSize": {
             "width": 128,
@@ -47,7 +47,7 @@
       "paramName": "Shininess",
       "paramOpt": {
         "type": "float",
-        "value": 32
+        "value": 33
       }
     },
     {
