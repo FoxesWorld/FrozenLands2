@@ -18,10 +18,11 @@ import jme3utilities.sky.SkyControl;
 import jme3utilities.sky.StarsOption;
 import jme3utilities.sky.Updater;
 import org.foxesworld.FrozenLands;
+import org.foxesworld.engine.Updateable;
 
 import java.util.Calendar;
 
-public class Sky {
+public class Sky implements Updateable {
 
     private String skyTexture = "textures/world/environment/skyBox.dds";
     private Vector3f sunDirection = new Vector3f(-1f, -1f, -1f);
@@ -163,5 +164,10 @@ public class Sky {
 
     public ColorRGBA getAmbientColor() {
         return this.ambientColor;
+    }
+
+    @Override
+    public void update(float tpf) {
+        this.updateTimeOfDay();
     }
 }

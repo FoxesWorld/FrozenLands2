@@ -11,7 +11,7 @@ import org.foxesworld.engine.providers.sound.SoundProvider;
 import org.foxesworld.engine.sky.Sky;
 import org.foxesworld.engine.terrain.TerrainGen;
 
-public class Engine extends BaseAppState {
+public class Engine extends BaseAppState implements Updateable {
 
     private Config config;
     private final String configFiles;
@@ -21,7 +21,7 @@ public class Engine extends BaseAppState {
     protected TerrainGen terrainGen;
     protected SoundProvider soundProvider;
 
-    public  Engine(FrozenLands frozenLands, String configFiles) {
+    public Engine(FrozenLands frozenLands, String configFiles) {
         this.frozenLands = frozenLands;
         this.configFiles = configFiles;
         this.getFrozenLands().getAssetManager().registerLoader(OBJImporter.class, "obj");
@@ -61,9 +61,7 @@ public class Engine extends BaseAppState {
     }
 
     @Override
-    public void update(float tpf) {
-        this.sky.updateTimeOfDay();
-    }
+    public void update(float tpf) {}
 
     public MaterialProvider getMaterialProvider() {
         return materialProvider;
@@ -83,5 +81,9 @@ public class Engine extends BaseAppState {
 
     public TerrainGen getTerrainGen() {
         return terrainGen;
+    }
+
+    public Sky getSky() {
+        return sky;
     }
 }

@@ -15,6 +15,7 @@ import com.jme3.system.AppSettings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.foxesworld.engine.Engine;
+import org.foxesworld.engine.Updateable;
 import org.foxesworld.engine.player.Player;
 
 import javax.imageio.ImageIO;
@@ -70,7 +71,7 @@ public class FrozenLands extends SimpleApplication {
     }
 
     private void plane() {
-        Box planeShape = new Box(Vector3f.ZERO, 20f, 0.5f, 20f);
+        Box planeShape = new Box(Vector3f.ZERO, 50f, 0.5f, 50f);
         Geometry plane = new Geometry("Plane", planeShape);
         plane.setMaterial(this.engine.getMaterialProvider().getMaterial("terrain#default"));
 
@@ -87,23 +88,8 @@ public class FrozenLands extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
-        player.getCamDir().set(cam.getDirection()).multLocal(0.3f);
-        player.getCamLeft().set(cam.getLeft()).multLocal(0.4f);
-        player.getWalkDirection().set(0, 0, 0);
-        if (player.isLeft()) {
-            player.getWalkDirection().addLocal(player.getCamLeft());
-        }
-        if (player.isRight()) {
-            player.getWalkDirection().addLocal(player.getCamLeft().negate());
-        }
-        if (player.isUp()) {
-            player.getWalkDirection().addLocal(player.getCamDir());
-        }
-        if (player.isDown()) {
-            player.getWalkDirection().addLocal(player.getCamDir().negate());
-        }
-        player.getPlayer().setWalkDirection(player.getWalkDirection());
-        cam.setLocation(player.getPlayer().getPhysicsLocation());
+        player.update(tpf);
+        this.engine.getSky().update(tpf);
     }
 
     public Engine getEngine() {

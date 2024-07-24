@@ -29,7 +29,7 @@ public class CameraFollowSpatial extends AbstractControl {
     }
 
     private void initialize() {
-        if (ready) return; // initialize only once.
+        if (ready) return;
         ready = true;
 
         if (offset == null) {

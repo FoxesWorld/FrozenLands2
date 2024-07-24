@@ -10,13 +10,15 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import org.foxesworld.FrozenLands;
+import org.foxesworld.engine.Updateable;
 
-public class Player implements ActionListener {
+public class Player implements ActionListener, Updateable {
 
     private InputManager inputManager;
     private CharacterControl player;
     private Vector3f walkDirection = new Vector3f();
     private boolean left = false, right = false, up = false, down = false;
+    private boolean onGround = false;
 
     final private Vector3f camDir = new Vector3f();
     final private Vector3f camLeft = new Vector3f();
@@ -24,12 +26,12 @@ public class Player implements ActionListener {
     private Node playerNode;
     private Camera cam;
 
-    private float rotationSpeed = 2f; // Скорость вращения
+    private float rotationSpeed = 2f;
 
     public Player(FrozenLands frozenLands){
         this.inputManager = frozenLands.getInputManager();
         this.rootNode = frozenLands.getRootNode();
-        this.cam = frozenLands.getCamera(); // Получаем камеру из FrozenLands
+        this.cam = frozenLands.getCamera();
         setUpKeys();
         CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 1f, 1);
         player = new CharacterControl(capsuleShape, 0.05f);
@@ -38,7 +40,7 @@ public class Player implements ActionListener {
         player.setGravity(30);
         player.setPhysicsLocation(new Vector3f(0, 10, 0));
 
-        playerNode = new Node("PlayerNode"); // Создаем узел
+        playerNode = new Node("PlayerNode");
         playerNode.addControl(player);
         rootNode.attachChild(playerNode);
         frozenLands.getBulletAppState().getPhysicsSpace().add(player);
@@ -69,7 +71,9 @@ public class Player implements ActionListener {
         } else if (binding.equals("Down")) {
             if (value) { down = true; } else { down = false; }
         } else if (binding.equals("Jump")) {
-            player.jump();
+            if(onGround) {
+                player.jump();
+            }
         }
     }
 
@@ -81,35 +85,33 @@ public class Player implements ActionListener {
         return camLeft;
     }
 
-    public InputManager getInputManager() {
-        return inputManager;
-    }
-
-    public Vector3f getWalkDirection() {
-        return walkDirection;
-    }
-
-    public boolean isLeft() {
-        return left;
-    }
-
-    public boolean isRight() {
-        return right;
-    }
-
-    public boolean isUp() {
-        return up;
-    }
-
-    public boolean isDown() {
-        return down;
-    }
-
-    public void setWalkDirection(Vector3f walkDirection) {
-        this.walkDirection = walkDirection;
-    }
-
     public CharacterControl getPlayer() {
         return player;
+    }
+
+    public void setOnGround(boolean onGround) {
+        this.onGround = onGround;
+    }
+
+    @Override
+    public void update(float tpf) {
+        getCamDir().set(cam.getDirection()).multLocal(0.3f);
+        getCamLeft().set(cam.getLeft()).multLocal(0.3f);
+        setOnGround(player.onGround());
+        walkDirection.set(0, 0, 0);
+        if (left) {
+            walkDirection.addLocal(camLeft);
+        }
+        if (right) {
+           walkDirection.addLocal(camLeft.negate());
+        }
+        if (up) {
+            walkDirection.addLocal(camDir);
+        }
+        if (down) {
+            walkDirection.addLocal(camDir.negate());
+        }
+        player.setWalkDirection(walkDirection);
+        cam.setLocation(player.getPhysicsLocation());
     }
 }

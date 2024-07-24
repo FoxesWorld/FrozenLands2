@@ -58,14 +58,14 @@
       "paramName": "Tex2Scale",
       "paramOpt": {
         "type": "float",
-        "value": 1
+        "value": 16
       }
     },
     {
       "paramName": "Tex3Scale",
       "paramOpt": {
         "type": "float",
-        "value": 2
+        "value": 16
       }
     }
   ]
