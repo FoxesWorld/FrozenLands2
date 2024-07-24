@@ -12,8 +12,8 @@ import java.util.*;
 import static org.foxesworld.engine.utils.InputReader.inputReader;
 
 public class SoundProvider {
-    private FrozenLands kernel;
-    private Map<String, Map<String, List<AudioNode>>> soundNodes;
+    private final FrozenLands kernel;
+    private final Map<String, Map<String, List<AudioNode>>> soundNodes;
 
     public SoundProvider(FrozenLands kernel) {
         this.kernel = kernel;
@@ -50,7 +50,6 @@ public class SoundProvider {
         AudioData.DataType dataType = AudioData.DataType.valueOf(settings.getDataType());
         AudioNode audioNode = new AudioNode(assetManager, filePath, dataType);
 
-        // Устанавливаем настройки звука
         if (settings.getVolume() != null) {
             audioNode.setVolume(settings.getVolume());
         }
@@ -81,51 +80,5 @@ public class SoundProvider {
         Random random = new Random();
         int randomIndex = random.nextInt(audioNodes.size());
         return audioNodes.get(randomIndex);
-    }
-
-    static class SoundEvent {
-        private String event;
-        private String soundDir;
-        private SoundSettings settings;
-        private List<String> sounds;
-
-        public String getEvent() {
-            return event;
-        }
-
-        public String getSoundDir() {
-            return soundDir;
-        }
-
-        public SoundSettings getSettings() {
-            return settings;
-        }
-
-        public List<String> getSounds() {
-            return sounds;
-        }
-    }
-
-    static class SoundSettings {
-        private Float volume;
-        private Boolean positional;
-        private Float pitch;
-        private String dataType;
-
-        public Float getVolume() {
-            return volume;
-        }
-
-        public Boolean isPositional() {
-            return positional;
-        }
-
-        public Float getPitch() {
-            return pitch;
-        }
-
-        public String getDataType() {
-            return dataType;
-        }
     }
 }

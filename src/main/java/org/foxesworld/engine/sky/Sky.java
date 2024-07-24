@@ -19,6 +19,8 @@ import jme3utilities.sky.StarsOption;
 import jme3utilities.sky.Updater;
 import org.foxesworld.FrozenLands;
 
+import java.util.Calendar;
+
 public class Sky {
 
     private String skyTexture = "textures/world/environment/skyBox.dds";
@@ -42,6 +44,52 @@ public class Sky {
         this.camera = kernel.getCamera();
         this.viewPort = kernel.getViewPort();
         this.createSky();
+    }
+
+    public void updateTimeOfDay() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        float timeOfDay = hour + minute / 60f;
+
+        // Define the colors for each time of day
+        ColorRGBA dawnColor = new ColorRGBA(1, 0.5f, 0.2f, 1); // warm orange color
+        ColorRGBA dayColor = new ColorRGBA(1, 1, 0.8f, 1); // bright blue color
+        ColorRGBA duskColor = new ColorRGBA(0.8f, 0.5f, 0.2f, 1); // warm orange color
+        ColorRGBA nightColor = new ColorRGBA(0.2f, 0.2f, 0.5f, 1); // dark blue color
+
+        // Define the time ranges for each color
+        float dawnRange = 5.0f / 24.0f; // 5am to 6am (dawn)
+        float dayRange = 12.0f / 24.0f; // 12pm to 3pm (day)
+        float duskRange = 18.0f / 24.0f; // 6pm to 7pm (dusk)
+        float nightRange = 22.0f / 24.0f; // 10pm to 5am (night)
+
+        // Calculate the color based on the time of day
+        ColorRGBA skyColor;
+        if (timeOfDay < dawnRange) {
+            skyColor = nightColor;
+        } else if (timeOfDay < dayRange) {
+            skyColor = interpolateColor(nightColor, dawnColor, (timeOfDay - dawnRange) / (dayRange - dawnRange));
+        } else if (timeOfDay < duskRange) {
+            skyColor = interpolateColor(dawnColor, dayColor, (timeOfDay - dayRange) / (duskRange - dayRange));
+        } else if (timeOfDay < nightRange) {
+            skyColor = interpolateColor(dayColor, duskColor, (timeOfDay - duskRange) / (nightRange - duskRange));
+        } else {
+            skyColor = interpolateColor(duskColor, nightColor, (timeOfDay - nightRange) / (1.0f - nightRange));
+        }
+
+        // Set the sky color
+        this.setTimeOfDay(timeOfDay);
+        this.setSunColor(skyColor);
+        this.setAmbientColor(skyColor);
+    }
+
+    private ColorRGBA interpolateColor(ColorRGBA start, ColorRGBA end, float t) {
+        float r = start.r + (end.r - start.r) * t;
+        float g = start.g + (end.g - start.g) * t;
+        float b = start.b + (end.b - start.b) * t;
+        return new ColorRGBA(r, g, b, 1);
     }
 
     private void createSky() {

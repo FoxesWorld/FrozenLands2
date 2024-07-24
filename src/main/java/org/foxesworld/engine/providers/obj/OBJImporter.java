@@ -23,11 +23,10 @@ public class OBJImporter implements AssetLoader {
 
     @Override
     public Object load(AssetInfo assetInfo) {
-        if (!(assetInfo.getKey() instanceof ModelKey)) {
+        if (!(assetInfo.getKey() instanceof ModelKey modelKey)) {
             throw new IllegalArgumentException("Asset key must be a ModelKey.");
         }
 
-        ModelKey modelKey = (ModelKey) assetInfo.getKey();
         String objFilePath = modelKey.getName();
         String objDir = objFilePath.substring(0, objFilePath.lastIndexOf('/'));
 
@@ -134,7 +133,7 @@ public class OBJImporter implements AssetLoader {
             }
 
             Geometry geometry = new Geometry("OBJGeometry", mesh);
-            Material material = createMaterial(assetInfo.getManager(), objDir, materials.get(currentMaterial));
+            Material material = createMaterial(assetInfo.getManager(), materials.get(currentMaterial));
             if (material == null) {
                 material = new Material(assetInfo.getManager(), "Common/MatDefs/Light/Lighting.j3md");
                 material.setColor("Diffuse", ColorRGBA.White);
@@ -207,7 +206,7 @@ public class OBJImporter implements AssetLoader {
         }
     }
 
-    private Material createMaterial(AssetManager assetManager, String objDir, MaterialData materialData) {
+    private Material createMaterial(AssetManager assetManager, MaterialData materialData) {
         if (materialData == null) {
             return null;
         }
