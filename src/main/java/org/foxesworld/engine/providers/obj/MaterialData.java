@@ -3,11 +3,12 @@ package org.foxesworld.engine.providers.obj;
 import com.jme3.math.ColorRGBA;
 
 public class MaterialData {
-    private ColorRGBA ambientColor = ColorRGBA.Black;
-    private ColorRGBA diffuseColor = ColorRGBA.Black;
-    private ColorRGBA specularColor = ColorRGBA.Black;
+    private ColorRGBA ambientColor;
+    private ColorRGBA diffuseColor;
+    private ColorRGBA specularColor;
+    private float shininess;
     private String diffuseMap;
-    private float shininess = 0;
+    private String normalMap;
 
     public ColorRGBA getAmbientColor() {
         return ambientColor;
@@ -47,5 +48,13 @@ public class MaterialData {
 
     public void setDiffuseMap(String diffuseMap) {
         this.diffuseMap = diffuseMap;
+    }
+
+    public String getNormalMap() {
+        return normalMap;
+    }
+
+    public void setNormalMap(String normalMap) {
+        this.normalMap = normalMap;
     }
 }

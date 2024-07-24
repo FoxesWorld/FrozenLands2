@@ -93,12 +93,28 @@ public class OBJImporter implements AssetLoader {
                 }
                 normalBuffer.flip();
                 mesh.setBuffer(VertexBuffer.Type.Normal, 3, normalBuffer);
+            } else {
+                // Initialize normal buffer with zeros if empty
+                FloatBuffer normalBuffer = BufferUtils.createFloatBuffer(vertices.size() * 3);
+                for (int i = 0; i < vertices.size(); i++) {
+                    normalBuffer.put(0).put(0).put(0);
+                }
+                normalBuffer.flip();
+                mesh.setBuffer(VertexBuffer.Type.Normal, 3, normalBuffer);
             }
 
             if (!texCoords.isEmpty()) {
                 FloatBuffer texCoordBuffer = BufferUtils.createFloatBuffer(texCoords.size() * 2);
                 for (Vector2f texCoord : texCoords.values()) {
                     texCoordBuffer.put(texCoord.getX()).put(texCoord.getY());
+                }
+                texCoordBuffer.flip();
+                mesh.setBuffer(VertexBuffer.Type.TexCoord, 2, texCoordBuffer);
+            } else {
+                // Initialize texCoord buffer with zeros if empty
+                FloatBuffer texCoordBuffer = BufferUtils.createFloatBuffer(vertices.size() * 2);
+                for (int i = 0; i < vertices.size(); i++) {
+                    texCoordBuffer.put(0).put(0);
                 }
                 texCoordBuffer.flip();
                 mesh.setBuffer(VertexBuffer.Type.TexCoord, 2, texCoordBuffer);
@@ -178,6 +194,11 @@ public class OBJImporter implements AssetLoader {
                             materials.get(currentMaterial).setDiffuseMap(parts[1]);
                         }
                         break;
+                    case "map_Bump":
+                        if (currentMaterial != null) {
+                            materials.get(currentMaterial).setNormalMap(parts[1]);
+                        }
+                        break;
                 }
             }
             reader.close();
@@ -199,6 +220,11 @@ public class OBJImporter implements AssetLoader {
         if (materialData.getDiffuseMap() != null) {
             Texture texture = assetManager.loadTexture(materialData.getDiffuseMap());
             material.setTexture("DiffuseMap", texture);
+        }
+
+        if (materialData.getNormalMap() != null) {
+            Texture normalTexture = assetManager.loadTexture(materialData.getNormalMap());
+            material.setTexture("NormalMap", normalTexture);
         }
 
         return material;

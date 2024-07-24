@@ -2,6 +2,8 @@ package org.foxesworld.engine;
 
 import com.jme3.app.Application;
 import com.jme3.app.state.BaseAppState;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import org.foxesworld.FrozenLands;
 import org.foxesworld.engine.config.Config;
 import org.foxesworld.engine.providers.material.MaterialProvider;
@@ -31,7 +33,11 @@ public class Engine extends BaseAppState {
         this.soundProvider = new SoundProvider(this.frozenLands);
         this.soundProvider.loadSounds("sounds.json");
         this.sky = new Sky(this.frozenLands);
-        sky.addSky();
+        sky.setTimeOfDay(12);
+        sky.setCloudiness(0.5f);
+        sky.setSunColor(ColorRGBA.Yellow);
+        sky.setAmbientColor(ColorRGBA.Blue);
+
     }
 
     @Override

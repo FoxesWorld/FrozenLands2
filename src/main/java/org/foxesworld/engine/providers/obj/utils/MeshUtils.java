@@ -14,6 +14,7 @@ public class MeshUtils {
         FloatBuffer pos = mesh.getFloatBuffer(VertexBuffer.Type.Position);
         FloatBuffer uv = mesh.getFloatBuffer(VertexBuffer.Type.TexCoord);
 
+        int triangleCount = mesh.getTriangleCount();
         int vertexCount = mesh.getVertexCount();
 
         FloatBuffer tangents = BufferUtils.createFloatBuffer(vertexCount * 3);
@@ -26,20 +27,18 @@ public class MeshUtils {
             bin[i] = new Vector3f();
         }
 
-        calculateTangentsAndBinormals(pos, uv, vertexCount, tan, bin);
+        for (int i = 0; i < triangleCount; i++) {
+            int index1 = mesh.getIndexBuffer().get(i * 3);
+            int index2 = mesh.getIndexBuffer().get(i * 3 + 1);
+            int index3 = mesh.getIndexBuffer().get(i * 3 + 2);
 
-        normalizeAndSetBuffers(mesh, tangents, binormals, tan, bin);
-    }
+            Vector3f v1 = getVector3f(pos, index1);
+            Vector3f v2 = getVector3f(pos, index2);
+            Vector3f v3 = getVector3f(pos, index3);
 
-    private static void calculateTangentsAndBinormals(FloatBuffer pos, FloatBuffer uv, int vertexCount, Vector3f[] tan, Vector3f[] bin) {
-        for (int i = 0; i < vertexCount; i += 3) {
-            Vector3f v1 = getVector3f(pos, i);
-            Vector3f v2 = getVector3f(pos, i + 1);
-            Vector3f v3 = getVector3f(pos, i + 2);
-
-            Vector2f uv1 = getVector2f(uv, i);
-            Vector2f uv2 = getVector2f(uv, i + 1);
-            Vector2f uv3 = getVector2f(uv, i + 2);
+            Vector2f uv1 = getVector2f(uv, index1);
+            Vector2f uv2 = getVector2f(uv, index2);
+            Vector2f uv3 = getVector2f(uv, index3);
 
             Vector3f edge1 = v2.subtract(v1);
             Vector3f edge2 = v3.subtract(v1);
@@ -59,32 +58,26 @@ public class MeshUtils {
                     f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z)
             );
 
-            addToVectors(tan, bin, i, tangent, binormal);
+            tan[index1].addLocal(tangent);
+            tan[index2].addLocal(tangent);
+            tan[index3].addLocal(tangent);
+            bin[index1].addLocal(binormal);
+            bin[index2].addLocal(binormal);
+            bin[index3].addLocal(binormal);
         }
-    }
 
-    private static Vector3f getVector3f(FloatBuffer buffer, int index) {
-        return new Vector3f(buffer.get(index * 3), buffer.get(index * 3 + 1), buffer.get(index * 3 + 2));
-    }
+        for (int i = 0; i < vertexCount; i++) {
+            Vector3f t = tan[i];
+            t.normalizeLocal();
+            tangents.put(i * 3, t.getX());
+            tangents.put(i * 3 + 1, t.getY());
+            tangents.put(i * 3 + 2, t.getZ());
 
-    private static Vector2f getVector2f(FloatBuffer buffer, int index) {
-        return new Vector2f(buffer.get(index * 2), buffer.get(index * 2 + 1));
-    }
-
-    private static void addToVectors(Vector3f[] tan, Vector3f[] bin, int i, Vector3f tangent, Vector3f binormal) {
-        tan[i].addLocal(tangent);
-        tan[i + 1].addLocal(tangent);
-        tan[i + 2].addLocal(tangent);
-        bin[i].addLocal(binormal);
-        bin[i + 1].addLocal(binormal);
-        bin[i + 2].addLocal(binormal);
-    }
-
-    private static void normalizeAndSetBuffers(Mesh mesh, FloatBuffer tangents, FloatBuffer binormals, Vector3f[] tan, Vector3f[] bin) {
-        for (int i = 0; i < tan.length; i++) {
-            tan[i].normalizeLocal();
-            bin[i].normalizeLocal();
-            setBufferValues(tangents, binormals, i, tan[i], bin[i]);
+            Vector3f b = bin[i];
+            b.normalizeLocal();
+            binormals.put(i * 3, b.getX());
+            binormals.put(i * 3 + 1, b.getY());
+            binormals.put(i * 3 + 2, b.getZ());
         }
 
         tangents.flip();
@@ -93,13 +86,17 @@ public class MeshUtils {
         mesh.setBuffer(VertexBuffer.Type.Binormal, 3, binormals);
     }
 
-    private static void setBufferValues(FloatBuffer tangents, FloatBuffer binormals, int i, Vector3f t, Vector3f b) {
-        tangents.put(i * 3, t.getX());
-        tangents.put(i * 3 + 1, t.getY());
-        tangents.put(i * 3 + 2, t.getZ());
+    private static Vector3f getVector3f(FloatBuffer buffer, int index) {
+        if (index * 3 + 2 >= buffer.limit()) {
+            throw new IndexOutOfBoundsException(index);
+        }
+        return new Vector3f(buffer.get(index * 3), buffer.get(index * 3 + 1), buffer.get(index * 3 + 2));
+    }
 
-        binormals.put(i * 3, b.getX());
-        binormals.put(i * 3 + 1, b.getY());
-        binormals.put(i * 3 + 2, b.getZ());
+    private static Vector2f getVector2f(FloatBuffer buffer, int index) {
+        if (index * 2 + 1 >= buffer.limit()) {
+            throw new IndexOutOfBoundsException(index);
+        }
+        return new Vector2f(buffer.get(index * 2), buffer.get(index * 2 + 1));
     }
 }

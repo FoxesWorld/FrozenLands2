@@ -43,10 +43,9 @@ public class FrozenLands extends SimpleApplication {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         stateManager.attach(this.engine);
-        this.flyCam.setMoveSpeed(128);
+        this.flyCam.setMoveSpeed(32);
 
-        Spatial model = assetManager.loadModel("meshes/Vulpine/VulpineHead.obj");
-        //model.setMaterial(this.engine.getMaterialProvider().getMaterial("vulpine#maleHead"));
+        Spatial model = assetManager.loadModel("meshes/Vulpine/VulpineTailSilver.obj");
         rootNode.attachChild(model);
     }
 
