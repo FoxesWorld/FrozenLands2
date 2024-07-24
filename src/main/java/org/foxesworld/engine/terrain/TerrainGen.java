@@ -20,6 +20,7 @@ import com.jme3.terrain.noise.modulator.NoiseModulator;
 import org.foxesworld.FrozenLands;
 import org.foxesworld.engine.Engine;
 
+@Deprecated
 public class TerrainGen {
     private AssetManager assetManager;
     private Engine kernelInterface;

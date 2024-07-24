@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 public class InputReader {
 
@@ -14,7 +15,7 @@ public class InputReader {
         StringBuilder jsonStringBuilder = new StringBuilder();
         String line;
         try {
-        InputStreamReader reader = new InputStreamReader(InputReader.class.getClassLoader().getResourceAsStream(path), StandardCharsets.UTF_8);
+        InputStreamReader reader = new InputStreamReader(Objects.requireNonNull(InputReader.class.getClassLoader().getResourceAsStream(path)), StandardCharsets.UTF_8);
         BufferedReader bufferedReader = new BufferedReader(reader);
 
         while ((line = bufferedReader.readLine()) != null) {

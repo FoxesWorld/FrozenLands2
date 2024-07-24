@@ -51,21 +51,21 @@
       "paramName": "Tex1Scale",
       "paramOpt": {
         "type": "float",
-        "value": 64
+        "value": 3
       }
     },
     {
       "paramName": "Tex2Scale",
       "paramOpt": {
         "type": "float",
-        "value": 64
+        "value": 1
       }
     },
     {
       "paramName": "Tex3Scale",
       "paramOpt": {
         "type": "float",
-        "value": 64
+        "value": 2
       }
     }
   ]

@@ -5,6 +5,7 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.RendererException;
 import com.jme3.scene.*;
 import com.jme3.texture.Texture;
 import com.jme3.util.BufferUtils;
@@ -20,6 +21,7 @@ import java.util.*;
 public class OBJImporter implements AssetLoader {
 
     private static final Logger logger = FrozenLands.logger;
+
 
     @Override
     public Object load(AssetInfo assetInfo) {
@@ -71,26 +73,54 @@ public class OBJImporter implements AssetLoader {
                     case "mtllib" -> {
                         String mtlFilePath = parts[1];
                         loadMTL(assetInfo.getManager(), objDir + '/' + mtlFilePath, materials);
+                        logger.debug("MTL File: " + mtlFilePath);
                     }
-                    case "usemtl" -> currentMaterial = parts[1];
+                    case "usemtl" -> {
+                        currentMaterial = parts[1];
+                        logger.debug("Use Material: " + currentMaterial);
+                    }
                 }
+            }
+
+            // Log sizes of loaded data
+            logger.debug("Loaded {} vertices, {} normals, {} texCoords, and {} faces for {}.",
+                    vertices.size(), normals.size(), texCoords.size(), faces.size(), assetInfo.getKey());
+
+            if (vertices.isEmpty()) {
+                logger.error("No vertices found!");
+                throw new RendererException("No vertices found!");
+            }
+
+            if (faces.isEmpty()) {
+                logger.error("No faces found!");
+                throw new RendererException("No faces found!");
             }
 
             Mesh mesh = new Mesh();
 
+            // Fill vertex buffer
             FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(vertices.size() * 3);
             for (Vector3f vertex : vertices.values()) {
                 vertexBuffer.put(vertex.getX()).put(vertex.getY()).put(vertex.getZ());
             }
             vertexBuffer.flip();
+            if (vertexBuffer.limit() == 0) {
+                logger.error("Vertex buffer is empty!");
+                throw new RendererException("Vertex buffer is empty!");
+            }
             mesh.setBuffer(VertexBuffer.Type.Position, 3, vertexBuffer);
 
+            // Fill normal buffer
             if (!normals.isEmpty()) {
                 FloatBuffer normalBuffer = BufferUtils.createFloatBuffer(normals.size() * 3);
                 for (Vector3f normal : normals.values()) {
                     normalBuffer.put(normal.getX()).put(normal.getY()).put(normal.getZ());
                 }
                 normalBuffer.flip();
+                if (normalBuffer.limit() == 0) {
+                    logger.error("Normal buffer is empty!");
+                    throw new RendererException("Normal buffer is empty!");
+                }
                 mesh.setBuffer(VertexBuffer.Type.Normal, 3, normalBuffer);
             } else {
                 // Initialize normal buffer with zeros if empty
@@ -99,15 +129,24 @@ public class OBJImporter implements AssetLoader {
                     normalBuffer.put(0).put(0).put(0);
                 }
                 normalBuffer.flip();
+                if (normalBuffer.limit() == 0) {
+                    logger.error("Default normal buffer is empty!");
+                    throw new RendererException("Default normal buffer is empty!");
+                }
                 mesh.setBuffer(VertexBuffer.Type.Normal, 3, normalBuffer);
             }
 
+            // Fill texCoord buffer
             if (!texCoords.isEmpty()) {
                 FloatBuffer texCoordBuffer = BufferUtils.createFloatBuffer(texCoords.size() * 2);
                 for (Vector2f texCoord : texCoords.values()) {
                     texCoordBuffer.put(texCoord.getX()).put(texCoord.getY());
                 }
                 texCoordBuffer.flip();
+                if (texCoordBuffer.limit() == 0) {
+                    logger.error("TexCoord buffer is empty!");
+                    throw new RendererException("TexCoord buffer is empty!");
+                }
                 mesh.setBuffer(VertexBuffer.Type.TexCoord, 2, texCoordBuffer);
             } else {
                 // Initialize texCoord buffer with zeros if empty
@@ -116,9 +155,14 @@ public class OBJImporter implements AssetLoader {
                     texCoordBuffer.put(0).put(0);
                 }
                 texCoordBuffer.flip();
+                if (texCoordBuffer.limit() == 0) {
+                    logger.error("Default TexCoord buffer is empty!");
+                    throw new RendererException("Default TexCoord buffer is empty!");
+                }
                 mesh.setBuffer(VertexBuffer.Type.TexCoord, 2, texCoordBuffer);
             }
 
+            // Fill index buffer
             IntBuffer indexBuffer = BufferUtils.createIntBuffer(faces.size() * 3);
             for (Face face : faces) {
                 for (Vertex v : face.getVertices()) {
@@ -126,8 +170,13 @@ public class OBJImporter implements AssetLoader {
                 }
             }
             indexBuffer.flip();
+            if (indexBuffer.limit() == 0) {
+                logger.error("Index buffer is empty!");
+                throw new RendererException("Index buffer is empty!");
+            }
             mesh.setBuffer(VertexBuffer.Type.Index, 3, indexBuffer);
 
+            // Compute tangent and binormal if normals and texCoords are available
             if (!normals.isEmpty() && !texCoords.isEmpty()) {
                 MeshUtils.computeTangentBinormal(mesh);
             }
@@ -150,6 +199,7 @@ public class OBJImporter implements AssetLoader {
             return new Node();
         }
     }
+
 
     private void loadMTL(AssetManager assetManager, String mtlFilePath, Map<String, MaterialData> materials) {
         try {
@@ -211,10 +261,22 @@ public class OBJImporter implements AssetLoader {
             return null;
         }
         Material material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        material.setColor("Ambient", materialData.getAmbientColor());
-        material.setColor("Diffuse", materialData.getDiffuseColor());
-        material.setColor("Specular", materialData.getSpecularColor());
-        material.setFloat("Shininess", materialData.getShininess());
+
+        if (materialData.getAmbientColor() != null) {
+            material.setColor("Ambient", materialData.getAmbientColor());
+        }
+
+        if (materialData.getDiffuseColor() != null) {
+            material.setColor("Diffuse", materialData.getDiffuseColor());
+        }
+
+        if (materialData.getSpecularColor() != null) {
+            material.setColor("Specular", materialData.getSpecularColor());
+        }
+
+        if (materialData.getShininess() > 0) {
+            material.setFloat("Shininess", materialData.getShininess());
+        }
 
         if (materialData.getDiffuseMap() != null) {
             Texture texture = assetManager.loadTexture(materialData.getDiffuseMap());

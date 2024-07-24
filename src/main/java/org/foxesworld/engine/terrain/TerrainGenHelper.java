@@ -10,6 +10,7 @@ import org.foxesworld.engine.Engine;
 import java.util.List;
 import java.util.stream.Stream;
 
+@Deprecated
 public class TerrainGenHelper {
 
     private Engine kernelInterface;
