@@ -1,0 +1,9 @@
+
+newmtl Material.000001
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+d 1
+Ns 33
+map_Kd /textures/Vulpine/Body/vulpinebody_d.png
+#map_Kn textures\vulpine\hands\malefoxhands_n.dds

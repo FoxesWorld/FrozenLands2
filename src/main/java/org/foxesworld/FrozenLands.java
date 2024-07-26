@@ -4,9 +4,9 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
@@ -15,7 +15,6 @@ import com.jme3.system.AppSettings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.foxesworld.engine.Engine;
-import org.foxesworld.engine.Updateable;
 import org.foxesworld.engine.player.Player;
 
 import javax.imageio.ImageIO;
@@ -31,7 +30,7 @@ public class FrozenLands extends SimpleApplication {
 
     public static void main(String[] args) {
         FrozenLands app = new FrozenLands();
-        app.setShowSettings(true);
+        //app.setShowSettings(true);
         var cfg = new AppSettings(false);
         cfg.setVSync(false);
         cfg.setResolution(640, 480);
@@ -48,11 +47,14 @@ public class FrozenLands extends SimpleApplication {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         stateManager.attach(this.engine);
+        flyCam.setEnabled(false);
+
         stateManager.getState(StatsAppState.class).toggleStats();
         player = new Player(this);
-        flyCam.setMoveSpeed(100);
+        player.setModel(this.engine.getObj().getModel("meshes/Vulpine/FemaleBodyDigiFull.obj", 1f));
 
-        Spatial model = assetManager.loadModel("meshes/Vulpine/VulpineTailSilver.obj");
+        Spatial model = this.engine.getObj().getModel("meshes/Vulpine/FemaleFoxHands.obj", 1f);
+        //model.setLocalTranslation(10,10,10);
         rootNode.attachChild(model);
 
         this.plane();
@@ -71,11 +73,11 @@ public class FrozenLands extends SimpleApplication {
     }
 
     private void plane() {
-        Box planeShape = new Box(Vector3f.ZERO, 50f, 0.5f, 50f);
+        Box planeShape = new Box(Vector3f.ZERO, 500f, 0.5f, 500f);
         Geometry plane = new Geometry("Plane", planeShape);
         plane.setMaterial(this.engine.getMaterialProvider().getMaterial("terrain#default"));
 
-        CollisionShape sceneShape = new BoxCollisionShape(planeShape.getXExtent(), planeShape.getYExtent(), planeShape.getZExtent());
+        CollisionShape sceneShape = CollisionShapeFactory.createMeshShape(plane);
         RigidBodyControl landscape = new RigidBodyControl(sceneShape, 0);
         plane.addControl(landscape);
 

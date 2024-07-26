@@ -1,0 +1,8 @@
+newmtl Material.000001
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.107408 0.0211643 0
+d 1
+Ns 33
+map_Kd textures\halffaces\hfs_federalistmuseumbench01.dds
+map_Kn textures\halffaces\hfs_federalistmuseumbench01_n.dds

@@ -6,6 +6,7 @@ import com.jme3.math.ColorRGBA;
 import org.foxesworld.FrozenLands;
 import org.foxesworld.engine.config.Config;
 import org.foxesworld.engine.providers.material.MaterialProvider;
+import org.foxesworld.engine.providers.OBJ;
 import org.foxesworld.engine.providers.obj.OBJImporter;
 import org.foxesworld.engine.providers.sound.SoundProvider;
 import org.foxesworld.engine.sky.Sky;
@@ -19,11 +20,13 @@ public class Engine extends BaseAppState implements Updateable {
     private final Sky sky;
     protected MaterialProvider materialProvider;
     protected TerrainGen terrainGen;
+    protected OBJ obj;
     protected SoundProvider soundProvider;
 
     public Engine(FrozenLands frozenLands, String configFiles) {
         this.frozenLands = frozenLands;
         this.configFiles = configFiles;
+        this.obj = new OBJ(this);
         this.getFrozenLands().getAssetManager().registerLoader(OBJImporter.class, "obj");
         this.materialProvider = new MaterialProvider(this.frozenLands);
         this.materialProvider.loadMaterials("materials.json");
@@ -85,5 +88,9 @@ public class Engine extends BaseAppState implements Updateable {
 
     public Sky getSky() {
         return sky;
+    }
+
+    public OBJ getObj() {
+        return obj;
     }
 }

@@ -1,6 +1,10 @@
 package org.foxesworld.engine.providers.obj;
 
 import com.jme3.asset.*;
+import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
@@ -21,7 +25,6 @@ import java.util.*;
 public class OBJImporter implements AssetLoader {
 
     private static final Logger logger = FrozenLands.logger;
-
 
     @Override
     public Object load(AssetInfo assetInfo) {
