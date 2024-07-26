@@ -1,28 +1,27 @@
 package org.foxesworld.engine.player;
 
+import com.jme3.anim.AnimComposer;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
-import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
-import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
-import com.jme3.input.controls.MouseAxisTrigger;
-import com.jme3.math.FastMath;
-import com.jme3.math.Matrix3f;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.control.Control;
 import org.foxesworld.FrozenLands;
 import org.foxesworld.engine.Updateable;
 
 public class Player implements ActionListener, Updateable {
 
+    private  FrozenLands frozenLands;
     private InputManager inputManager;
-    private CharacterControl player;
+    private CharacterControl playerControl;
+    private AnimComposer anim;
     private Vector3f walkDirection = new Vector3f();
     private boolean left = false, right = false, up = false, down = false;
     private boolean onGround = false;
@@ -36,30 +35,27 @@ public class Player implements ActionListener, Updateable {
 
     private float rotationSpeed = 2f;
     private float distanceFromPlayer = 5f;  // Distance for third-person view
-
-    // Для покачивания камеры
-    private float swayOffset = 0f; // Текущий сдвиг покачивания
-    private boolean isMoving = false; // Двигается ли игрок
-    private static final float SWAY_AMOUNT = 0.1f; // Сила покачивания
-    private static final float SWAY_SPEED = 5f; // Скорость покачивания
+    private float swayOffset = 0f;
+    private boolean isMoving = false;
     private FpsCam fpsCam;
 
     public Player(FrozenLands frozenLands) {
+        this.frozenLands = frozenLands;
         this.inputManager = frozenLands.getInputManager();
         this.rootNode = frozenLands.getRootNode();
         this.cam = frozenLands.getCamera();
         setUpKeys();
         CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 1f, 1);
-        player = new CharacterControl(capsuleShape, 0.05f);
-        player.setJumpSpeed(10);
-        player.setFallSpeed(30);
-        player.setGravity(30);
-        player.setPhysicsLocation(new Vector3f(0, 10, 0));
+        playerControl = new CharacterControl(capsuleShape, 0.05f);
+        playerControl.setJumpSpeed(10);
+        playerControl.setFallSpeed(30);
+        playerControl.setGravity(30);
+        playerControl.setPhysicsLocation(new Vector3f(0, 10, 0));
 
         playerNode = new Node("PlayerNode");
-        playerNode.addControl(player);
+        playerNode.addControl(playerControl);
         rootNode.attachChild(playerNode);
-        frozenLands.getBulletAppState().getPhysicsSpace().add(player);
+        frozenLands.getBulletAppState().getPhysicsSpace().add(playerControl);
     }
 
     private void setUpKeys() {
@@ -86,7 +82,7 @@ public class Player implements ActionListener, Updateable {
         } else if (binding.equals("Down")) {
             down = value;
         } else if (binding.equals("Jump") && value && onGround) {
-            player.jump();
+            playerControl.jump();
         } else if (binding.equals("SwitchView") && value) {
             firstPerson = !firstPerson;
         }
@@ -96,7 +92,7 @@ public class Player implements ActionListener, Updateable {
     public void update(float tpf) {
         camDir.set(cam.getDirection()).multLocal(0.3f);
         camLeft.set(cam.getLeft()).multLocal(0.3f);
-        onGround = player.onGround();
+        onGround = playerControl.onGround();
         walkDirection.set(0, 0, 0);
 
         if (left) {
@@ -112,7 +108,7 @@ public class Player implements ActionListener, Updateable {
             walkDirection.addLocal(camDir.negate());
         }
 
-        player.setWalkDirection(walkDirection);
+        playerControl.setWalkDirection(walkDirection);
         isMoving = walkDirection.lengthSquared() > 0;
 
         if(isMoving) {
@@ -122,9 +118,9 @@ public class Player implements ActionListener, Updateable {
         }
 
         if (firstPerson) {
-            cam.setLocation(player.getPhysicsLocation());
+            cam.setLocation(playerControl.getPhysicsLocation());
         } else {
-            Vector3f thirdPersonCamLocation = player.getPhysicsLocation().subtract(camDir.mult(distanceFromPlayer));
+            Vector3f thirdPersonCamLocation = playerControl.getPhysicsLocation().subtract(camDir.mult(distanceFromPlayer));
             cam.setLocation(thirdPersonCamLocation);
         }
     }
@@ -135,8 +131,8 @@ public class Player implements ActionListener, Updateable {
         }
     }
 
-    public CharacterControl getPlayer() {
-        return player;
+    public CharacterControl getPlayerControl() {
+        return playerControl;
     }
 
     public void setOnGround(boolean onGround) {

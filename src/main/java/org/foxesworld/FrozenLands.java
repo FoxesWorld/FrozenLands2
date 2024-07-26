@@ -7,7 +7,9 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
@@ -16,6 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.foxesworld.engine.Engine;
 import org.foxesworld.engine.player.Player;
+import org.foxesworld.engine.providers.OBJ;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -51,11 +54,16 @@ public class FrozenLands extends SimpleApplication {
 
         stateManager.getState(StatsAppState.class).toggleStats();
         player = new Player(this);
-        player.setModel(this.engine.getObj().getModel("meshes/Vulpine/FemaleBodyDigiFull.obj", 1f));
+        OBJ playerObj = this.engine.getObj().getModel("meshes/Vulpine/FemaleBodyDigiFull.obj", 0.1f);
+        Spatial playerModel = playerObj.getModel();
+        playerModel.setCullHint(Spatial.CullHint.Never);
+        playerModel.setShadowMode(RenderQueue.ShadowMode.Cast);
+        playerModel.addControl(player.getPlayerControl());
+        this.getBulletAppState().getPhysicsSpace().setGravity(new Vector3f(0f, -50f, 0f));
+        playerObj.getObjectControl().setCcdMotionThreshold(0f);
+        rootNode.attachChild(playerModel);
+        player.setModel(playerModel);
 
-        Spatial model = this.engine.getObj().getModel("meshes/Vulpine/FemaleFoxHands.obj", 1f);
-        //model.setLocalTranslation(10,10,10);
-        rootNode.attachChild(model);
 
         this.plane();
     }
@@ -85,7 +93,7 @@ public class FrozenLands extends SimpleApplication {
 
         this.rootNode.attachChild(plane);
         bulletAppState.getPhysicsSpace().add(landscape);
-        bulletAppState.getPhysicsSpace().add(player.getPlayer());
+        bulletAppState.getPhysicsSpace().add(player.getPlayerControl());
     }
 
     @Override
